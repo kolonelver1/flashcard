@@ -1,0 +1,44 @@
+node server.js
+"server.jsというファイルを実行するコマンド"
+"ポート3000の起動"
+
+http-server 
+"ローカルサーバーを立ち上げるコマンド"
+"Ctrl C でサーバー停止"
+
+MongoDB AtlasはこれだけでOK
+
+& "C:\Program Files\MongoDB\Server\8.0\bin\mongod.exe" --config "C:\Program Files\MongoDB\Server\8.0\bin\mongod.cfg"
+"MongoDBの起動"
+
+mongosh
+"MongoDBの接続"
+
+起動ターミナルで終了する
+Ctrl C
+
+バックアップファイルの作成
+mongodump --host localhost --port 27017 --out "C:\MongoDB_Backups"
+
+
+"【Service Workerの解除】"
+"開発者ツール→「Application」→左側のメニューから「Service Workers」→「Unregister」"
+
+require()
+"Node.jsで使用される関数,モジュールを他のファイルに読み込む"
+
+CORS
+"ブラウザからAPIなどにリクエストを送る際に、オリジンが異なる場合でも安全に通信を行うために使う"
+
+const { ObjectId } = mongoose.Types; 
+"Mongooseから ObjectId 型をインポート"
+"この書き方は、JavaScriptの分割代入= mongoose.Types オブジェクトの中にある ObjectId を直接変数として取り出す"
+
+mongoose.type
+"MongoDBで使用される特定のデータ型やユーティリティ関数を操作するためのツールセット"
+
+mongoose
+"MongoDBとNode.jsの間の「仲介役」"
+
+"非同期処理とは、プログラムが特定の処理を実行している間に他の処理を同時に行える仕組みのこと"
+await "処理を完了まで待機"
