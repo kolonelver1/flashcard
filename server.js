@@ -9,7 +9,7 @@ const https = require('https');
 const fs = require('fs');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;  // Heroku環境ではポートを環境変数から取得
 
 // SSL証明書と秘密鍵の読み込み
 const options = {
@@ -22,7 +22,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // MongoDB Atlasへの接続
-const uri = "mongodb+srv://kogepurin:ZzsBoSa9fEJPSBot@flashcardserver.uhvbw.mongodb.net/your_database_name?retryWrites=true&w=majority&appName=FlashcardServer";
+const uri = process.env.MONGODB_URI || "mongodb+srv://kogepurin:ZzsBoSa9fEJPSBot@flashcardserver.uhvbw.mongodb.net/your_database_name?retryWrites=true&w=majority&appName=FlashcardServer";
 mongoose.connect(uri)
   .then(() => console.log('MongoDB connected to Atlas'))
   .catch(error => console.error('MongoDB connection error:', error));
@@ -247,6 +247,7 @@ app.post('/delete', async (req, res) => { //指定パスからデータ取得
 });
 
 // HTTPSサーバーの起動
+// サーバーの起動処理
 https.createServer(options, app).listen(PORT, () => {
-  console.log(`HTTPS server running on https://localhost:${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });

@@ -8,10 +8,23 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // フラッシュカードを取得して表示する処理
   try {
-    const response = await fetch('https://localhost:3000/api/flashcards');
+    const apiUrl = process.env.NODE_ENV === 'production'
+      ? 'https://my-flashcard-app.herokuapp.com/api/flashcards'  // Herokuの本番環境URL
+      : 'https://localhost:3000/api/flashcards';  // ローカル環境URL
+
+    const response = await fetch(apiUrl, {
+      // 自己署名証明書のエラーを無視する場合、以下のオプションを追加することも可能
+      // credentials: 'same-origin',  // Cookieなどを必要とする場合
+      headers: {
+        'Content-Type': 'application/json',
+        // 必要ならばAuthorizationヘッダーを追加
+      },
+    });
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
+
 
     const flashcards = await response.json();
     console.log("Fetched Flashcards:", flashcards); // 取得したフラッシュカードを表示
