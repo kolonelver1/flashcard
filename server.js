@@ -22,10 +22,12 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // MongoDB Atlasへの接続
-const uri = process.env.MONGODB_URI || "mongodb+srv://kogepurin:ZzsBoSa9fEJPSBot@flashcardserver.uhvbw.mongodb.net/your_database_name?retryWrites=true&w=majority&appName=FlashcardServer";
+const uri = process.env.MONGODB_URI || "mongodb+srv://kogepurin:ZzsBoSa9fEJPSBot@flashcardserver.uhvbw.mongodb.net/flashcards?retryWrites=true&w=majority&appName=FlashcardServer";
+
 mongoose.connect(uri)
   .then(() => console.log('MongoDB connected to Atlas'))
   .catch(error => console.error('MongoDB connection error:', error));
+
 
 // エンドポイント
 app.get('/', (req, res) => {

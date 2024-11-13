@@ -6,6 +6,14 @@ http-server
 "ローカルサーバーを立ち上げるコマンド"
 "Ctrl C でサーバー停止"
 
+heroku logs --tail --app my-flashcard-app
+
+heroku restart --app my-flashcard-app
+
+heroku config:set MONGODB_URI="mongodb+srv://kogepurin:ZzsBoSa9fEJPSBot@flashcardserver.uhvbw.mongodb.net/flashcards?retryWrites=true&w=majority&appName=FlashcardServer"
+
+  環境変数設定、エンコード済み
+
 MongoDB AtlasはこれだけでOK
 
 & "C:\Program Files\MongoDB\Server\8.0\bin\mongod.exe" --config "C:\Program Files\MongoDB\Server\8.0\bin\mongod.cfg"
