@@ -9,6 +9,9 @@ const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 3000;  // Heroku環境ではポートを環境変数から取得
 
+// faviconリクエストを無視する
+app.use('/favicon.ico', (req, res) => res.status(204)); // 204 No Content
+
 // SSL証明書と秘密鍵の読み込み
 const options = {
   cert: fs.readFileSync('./cert.crt'),
