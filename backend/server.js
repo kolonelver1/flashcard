@@ -1,10 +1,8 @@
 // サーバーサイド フレームワークexpressを使用
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const { ObjectId } = mongoose.Types;
 const https = require('https');
 const fs = require('fs');
 
@@ -24,10 +22,13 @@ app.use(bodyParser.json());
 // MongoDB Atlasへの接続
 const uri = process.env.MONGODB_URI || "mongodb+srv://kogepurin:ZzsBoSa9fEJPSBot@flashcardserver.uhvbw.mongodb.net/flashcards?retryWrites=true&w=majority&appName=FlashcardServer";
 
-mongoose.connect(uri)
+mongoose.connect(uri, {
+  useNewUrlParser: true,       // 新しいURLパーサーを使用
+  useUnifiedTopology: true,    // 統一されたトポロジーを使用
+  ssl: true                    // SSL接続を有効化
+})
   .then(() => console.log('MongoDB connected to Atlas'))
   .catch(error => console.error('MongoDB connection error:', error));
-
 
 // エンドポイント
 app.get('/', (req, res) => {
