@@ -19,16 +19,11 @@ const options = {
 app.use(cors());
 app.use(bodyParser.json());
 
-// MongoDB Atlasへの接続
-const uri = process.env.MONGODB_URI || "mongodb+srv://kogepurin:ZzsBoSa9fEJPSBot@flashcardserver.uhvbw.mongodb.net/flashcards?retryWrites=true&w=majority&appName=FlashcardServer";
-
-mongoose.connect(uri, {
-  useNewUrlParser: true,       // 新しいURLパーサーを使用
-  useUnifiedTopology: true,    // 統一されたトポロジーを使用
-  ssl: true                    // SSL接続を有効化
-})
-  .then(() => console.log('MongoDB connected to Atlas'))
-  .catch(error => console.error('MongoDB connection error:', error));
+// 環境変数を参照してMongoDB Atlasに接続
+const dbURI = process.env.MONGODB_URI; // Herokuで設定した環境変数の名前を使用
+mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('Connected to MongoDB Atlas'))
+  .catch(err => console.error('Error connecting to MongoDB:', err));
 
 // エンドポイント
 app.get('/', (req, res) => {
