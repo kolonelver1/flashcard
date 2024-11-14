@@ -23,15 +23,19 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // 環境変数を参照してMongoDB Atlasに接続
-const dbURI = process.env.MONGODB_URI; // Herokuで設定した環境変数の名前を使用
-mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
+const dbURI = process.env.MONGODB_URI || 'your_default_mongodb_uri'; // デフォルトのURIを設定
+mongoose.connect(dbURI)
   .then(() => console.log('Connected to MongoDB Atlas'))
-  .catch(err => console.error('Error connecting to MongoDB:', err));
+  .catch(err => {
+    console.error('Error connecting to MongoDB:', err);
+    process.exit(1); // MongoDBへの接続失敗時にプロセスを終了
+  });
 
 // エンドポイント
 app.get('/', (req, res) => {
-  res.send('API is running');
+  res.status(200).send('API is running'); // 明示的にステータスコード200を返す
 });
+
 
 // スキーマの定義
 const flashcardSchema = new mongoose.Schema({
