@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+
+<head>
+  <meta charset="utf-8">
+  <title>メインページ</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="manifest" href="/manifest.json">
+
+</head>
+
+<body>
+  <form id="add-form">
+    <textarea id="quiz-text"></textarea>
+    <textarea id="answer-text"></textarea>
+    <button id="save" type="button">Add</button>
+  </form>
+
+  <div id="start">
+    <select id="studyDatesSelect">
+      <option value="">Select a Study Date</option>
+    </select>
+    <button id="quiz">問題を解く</button>
+  </div>
+
+  <form>
+    <!-- 日付から取得 -->
+    <select id="getQuizDate">
+      <option value="">Select a Study Date</option>
+    </select>
+    <button id="getQuiz">日付から取得する</button>
+  </form>
+
+  <form>
+    <!-- Levelから取得 -->
+    <select id="getQuizLevel">
+      <option value="">Select a Study Level</option>
+    </select>
+    <button id="getSelectLevel">Levelから取得する</button>
+  </form>
+
+  <div id="question-list">
+    <!-- 問題一覧 -->
+    <button id="delete" type="button" onclick="deleteSelected()">削除する</button>
+    <!-- 削除用のフォームを囲む -->
+    <form id="deleteForm">
+      <div id="deleteItems">
+        <!-- チェックボックス付きの問題がここに表示される -->
+      </div>
+    </form>
+  </div>
+
+  <script src="add.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>
