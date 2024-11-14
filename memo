@@ -6,7 +6,7 @@ http-server
 "ローカルサーバーを立ち上げるコマンド"
 "Ctrl C でサーバー停止"
 
-heroku logs --tail --app my-flashcard-app
+heroku logs --tail --app my-flashcard
 
 heroku restart --app my-flashcard-app
 

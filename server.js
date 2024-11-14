@@ -3,8 +3,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const https = require('https');
-const fs = require('fs');
+// const https = require('https');
+// const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;  // Heroku環境ではポートを環境変数から取得
@@ -13,10 +13,10 @@ const PORT = process.env.PORT || 3000;  // Heroku環境ではポートを環境�
 app.use('/favicon.ico', (req, res) => res.status(204)); // 204 No Content
 
 // SSL証明書と秘密鍵の読み込み
-const options = {
-  cert: fs.readFileSync('./cert.crt'),
-  key: fs.readFileSync('./private.key')
-};
+// const options = {
+//   cert: fs.readFileSync('./cert.crt'),
+//   key: fs.readFileSync('./private.key')
+// };
 
 // ミドルウェアの設定
 app.use(cors());
@@ -247,8 +247,12 @@ app.post('/delete', async (req, res) => { //指定パスからデータ取得
   }
 });
 
-// HTTPSサーバーの起動
-// サーバーの起動処理
-https.createServer(options, app).listen(PORT, () => {
+app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+// HTTPSサーバーの起動
+// サーバーの起動処理
+// https.createServer(options, app).listen(PORT, () => {
+//   console.log(`Server is running on port ${PORT}`);
+// });
