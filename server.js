@@ -10,8 +10,7 @@ const mongoose = require('mongoose');
 const app = express();
 const PORT = process.env.PORT || 3000;  // Heroku環境ではポートを環境変数から取得
 
-// faviconリクエストを無視する
-app.use('/favicon.ico', (req, res) => res.status(204)); // 204 No Content
+app.get('/favicon.ico', (req, res) => res.status(204).end());
 
 // ミドルウェアの設定
 app.use(cors());
