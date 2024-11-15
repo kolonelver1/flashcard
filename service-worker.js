@@ -23,19 +23,35 @@ self.addEventListener('install', event => {
                 console.error('Failed to cache resources:', error);
             })
     );
+    self.skipWaiting(); // 即座に新しい SW を有効化
 });
 
 // フェッチイベント
 self.addEventListener('fetch', event => {
     event.respondWith(
-        caches.match(event.request).then(cachedResponse => {
-            return cachedResponse || fetch(event.request)
-                .catch(error => {
-                    console.error('Fetch failed:', error);
-                });
+      caches.match(event.request)
+        .then(cachedResponse => {
+          // キャッシュが存在すればそれを返す
+          if (cachedResponse) {
+            return cachedResponse;
+          }
+          // キャッシュがない場合はネットワークリクエストを試みる
+          return fetch(event.request).then(networkResponse => {
+            // レスポンスが成功したらキャッシュに保存（省略可能）
+            return caches.open('flashcard-cache').then(cache => {
+              cache.put(event.request, networkResponse.clone());
+              return networkResponse;
+            });
+          });
+        })
+        .catch(error => {
+          // ネットワークエラー時の代替レスポンスを指定
+          console.error('Fetch failed:', error);
+          return new Response('Offline or error occurred', { status: 503 });
         })
     );
-});
+  });
+  
 
 // 古いキャッシュを削除するためのアクティベートイベント
 self.addEventListener('activate', event => {
