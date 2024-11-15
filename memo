@@ -7,8 +7,10 @@ http-server
 "Ctrl C でサーバー停止"
 
 heroku logs --tail --app my-flashcard
+heroku logs --clear --app my-flashcard
 
-heroku restart --app my-flashcard-app
+
+heroku restart --app my-flashcard
 
 heroku config:set MONGODB_URI="mongodb+srv://kogepurin:ZzsBoSa9fEJPSBot@flashcardserver.uhvbw.mongodb.net/flashcards?retryWrites=true&w=majority&appName=FlashcardServer"
 

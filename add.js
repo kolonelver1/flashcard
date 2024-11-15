@@ -5,9 +5,8 @@ let flashcards = [];  // グローバルに宣言
 // HTMLが読み込まれてから実行
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    const apiUrl = process.env.NODE_ENV === 'production' 
-  ? 'https://my-flashcard-app.herokuapp.com/api/flashcards'  // Herokuの本番環境URL
-  : 'https://localhost:3000/api/flashcards';  // ローカル環境URL
+    const apiUrl = 'https://my-flashcard-52952319bda7.herokuapp.com/api/flashcards';
+
 
 const response = await fetch(apiUrl, {
   // 自己署名証明書のエラーを無視する場合、以下のオプションを追加することも可能

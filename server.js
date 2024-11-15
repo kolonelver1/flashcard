@@ -1,10 +1,11 @@
 // サーバーサイド フレームワークexpressを使用
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
-// const https = require('https');
-// const fs = require('fs');
+// const https = require('https'); // HTTPS通信が必要であれば復活
+// const fs = require('fs'); // SSL証明書を使用する場合復活
 
 const app = express();
 const PORT = process.env.PORT || 3000;  // Heroku環境ではポートを環境変数から取得
@@ -12,28 +13,31 @@ const PORT = process.env.PORT || 3000;  // Heroku環境ではポートを環境�
 // faviconリクエストを無視する
 app.use('/favicon.ico', (req, res) => res.status(204)); // 204 No Content
 
-// SSL証明書と秘密鍵の読み込み
-// const options = {
-//   cert: fs.readFileSync('./cert.crt'),
-//   key: fs.readFileSync('./private.key')
-// };
-
 // ミドルウェアの設定
 app.use(cors());
-app.use(bodyParser.json());
+app.use(bodyParser.json());  // JSONデータのパース
 
-// 環境変数を参照してMongoDB Atlasに接続
-const dbURI = process.env.MONGODB_URI || 'your_default_mongodb_uri'; // デフォルトのURIを設定
-mongoose.connect(dbURI)
-  .then(() => console.log('Connected to MongoDB Atlas'))
-  .catch(err => {
+// サーバータイムアウト設定を60秒に
+app.set('timeout', 60000); // 60秒
+
+// MongoDB接続
+const connectToDatabase = async () => {
+  const dbURI = process.env.MONGODB_URI || 'your_default_mongodb_uri'; // デフォルトのURIを設定
+
+  try {
+    await mongoose.connect(dbURI);
+    console.log('Connected to MongoDB Atlas');
+  } catch (err) {
     console.error('Error connecting to MongoDB:', err);
     process.exit(1); // MongoDBへの接続失敗時にプロセスを終了
-  });
+  }
+};
+
+connectToDatabase(); // MongoDBに接続
 
 // エンドポイント
 app.get('/', (req, res) => {
-  res.status(200).send('API is running'); // 明示的にステータスコード200を返す
+  res.status(200).send('API is running'); // APIが稼働中であることを明示的に返す
 });
 
 
