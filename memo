@@ -5,8 +5,9 @@ node server.js
 git add .
 git commit -m "Fixed manifest.json and updated icons"
 
-git push heroku main
 git push origin main
+git push heroku main
+
 
 
 heroku logs --tail --app my-flashcard
