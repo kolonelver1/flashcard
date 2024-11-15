@@ -2,9 +2,12 @@ node server.js
 "server.jsというファイルを実行するコマンド"
 "ポート3000の起動"
 
-http-server 
-"ローカルサーバーを立ち上げるコマンド"
-"Ctrl C でサーバー停止"
+git add .
+git commit -m "Fixed manifest.json and updated icons"
+
+git push heroku main
+git push origin main
+
 
 heroku logs --tail --app my-flashcard
 heroku logs --clear --app my-flashcard
