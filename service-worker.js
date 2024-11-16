@@ -24,12 +24,13 @@ self.addEventListener('install', event => {
 
 // フェッチイベント
 self.addEventListener('fetch', event => {
-  // POST リクエストはキャッシュせず、そのままネットワークに送信
+  // POST リクエストをキャッシュせずに直接ネットワークへ送信
   if (event.request.method === 'POST') {
       event.respondWith(
-          fetch(event.request)
+          fetch(event.request.clone())
               .then(response => {
-                  return response; // サーバーからのレスポンスをそのまま返す
+                  // 正常なレスポンスをそのまま返す
+                  return response;
               })
               .catch(error => {
                   console.error('POST request failed:', error);
@@ -43,14 +44,14 @@ self.addEventListener('fetch', event => {
   event.respondWith(
       caches.match(event.request).then(cachedResponse => {
           return cachedResponse || fetch(event.request).then(networkResponse => {
-              // キャッシュに保存
               return caches.open(CACHE_NAME).then(cache => {
-                  cache.put(event.request, networkResponse.clone());
+                  if (event.request.method === 'GET') {
+                      cache.put(event.request, networkResponse.clone());
+                  }
                   return networkResponse;
               });
           });
       }).catch(() => {
-          // オフライン時の代替処理
           return new Response('Offline or error occurred', { status: 503 });
       })
   );
