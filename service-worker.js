@@ -24,16 +24,25 @@ self.addEventListener('install', event => {
 
 // フェッチイベント
 self.addEventListener('fetch', event => {
+  // POST リクエストはキャッシュしない
+  if (event.request.method === 'POST') {
+      event.respondWith(fetch(event.request));
+      return;
+  }
+
+  // GET リクエストに対してキャッシュ処理を実行
   event.respondWith(
-      fetch(event.request).then(networkResponse => {
-          // ネットワークレスポンスをキャッシュに保存
-          return caches.open(CACHE_NAME).then(cache => {
-              cache.put(event.request, networkResponse.clone());
-              return networkResponse;
+      caches.match(event.request).then(cachedResponse => {
+          return cachedResponse || fetch(event.request).then(networkResponse => {
+              // キャッシュに保存
+              return caches.open(CACHE_NAME).then(cache => {
+                  cache.put(event.request, networkResponse.clone());
+                  return networkResponse;
+              });
           });
       }).catch(() => {
-          // ネットワークエラー時にキャッシュを返す
-          return caches.match(event.request);
+          // オフライン時の代替処理（オプション）
+          return new Response('Offline or error occurred', { status: 503 });
       })
   );
 });
