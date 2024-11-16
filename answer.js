@@ -123,7 +123,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             await updateLevel(currentCard._id, difficulty);
 
             // 更新後に問題ページへ遷移
-            window.location.href = `quiz.html?date=${encodeURIComponent(dateParam)}`;
+            // window.location.href = `quiz.html?date=${encodeURIComponent(dateParam)}`;
           } else {
             console.error('No matching flashcards found for updating level.');
           }
