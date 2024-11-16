@@ -21,6 +21,7 @@ app.use(cors({
   origin: allowedOrigins,  // 特定のオリジンを指定
   methods: ['GET', 'POST', 'OPTIONS'],  // 許可するメソッド
 }));
+app.use(bodyParser.json());  // JSONデータをパースするミドルウェア
 
 // サーバータイムアウト設定を60秒に
 app.set('timeout', 60000); // 60秒
