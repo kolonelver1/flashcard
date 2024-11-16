@@ -24,9 +24,18 @@ self.addEventListener('install', event => {
 
 // フェッチイベント
 self.addEventListener('fetch', event => {
-  // POST リクエストはキャッシュしない
+  // POST リクエストはキャッシュせず、そのままネットワークに送信
   if (event.request.method === 'POST') {
-      event.respondWith(fetch(event.request));
+      event.respondWith(
+          fetch(event.request)
+              .then(response => {
+                  return response; // サーバーからのレスポンスをそのまま返す
+              })
+              .catch(error => {
+                  console.error('POST request failed:', error);
+                  return new Response('POST request failed', { status: 500 });
+              })
+      );
       return;
   }
 
@@ -41,7 +50,7 @@ self.addEventListener('fetch', event => {
               });
           });
       }).catch(() => {
-          // オフライン時の代替処理（オプション）
+          // オフライン時の代替処理
           return new Response('Offline or error occurred', { status: 503 });
       })
   );
