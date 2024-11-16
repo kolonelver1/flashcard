@@ -25,7 +25,7 @@ self.addEventListener('install', event => {
 
 // フェッチイベント
 self.addEventListener('fetch', event => {
-  console.log('Fetching:', event.request.url, 'Method:', event.request.method);  // 追加：リクエストのメソッドとURLをログに出力
+  console.log('Fetching:', event.request.url, 'Method:', event.request.method);  // リクエストのメソッドとURLをログに出力
 
   if (event.request.method === 'POST') {
     console.log('Handling POST request:', event.request.url); // POSTリクエストを確認
@@ -33,8 +33,14 @@ self.addEventListener('fetch', event => {
     event.respondWith(
       fetch(event.request.clone())  // POSTリクエストはキャッシュしない
         .then(response => {
+          // CORSヘッダーを追加する
+          const clonedResponse = response.clone();
+          clonedResponse.headers.set('Access-Control-Allow-Origin', '*');  // 任意のオリジンを許可
+          clonedResponse.headers.set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');  // 許可するメソッド
+          clonedResponse.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');  // 許可するヘッダー
+
           console.log('POST request successful:', event.request.url);  // 成功時のログ
-          return response;
+          return clonedResponse;
         })
         .catch(error => {
           console.error('POST request failed:', error);
@@ -44,19 +50,22 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // GET リクエストの処理（コメントアウトした部分）
+  // その他のリクエストに関してもCORSを設定する場合
   event.respondWith(
-    fetch(event.request).then(networkResponse => {
-      return caches.open(CACHE_NAME).then(cache => {
-        cache.put(event.request, networkResponse.clone());  // 最新のレスポンスをキャッシュ
-        return networkResponse;
-      });
-    }).catch(() => {
-      return caches.match(event.request);  // ネットワークにアクセスできない場合はキャッシュから返す
-    })
+    fetch(event.request)
+      .then(response => {
+        const clonedResponse = response.clone();
+        clonedResponse.headers.set('Access-Control-Allow-Origin', '*');  // 任意のオリジンを許可
+        clonedResponse.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');  // 許可するメソッド
+        clonedResponse.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');  // 許可するヘッダー
+        return clonedResponse;
+      })
+      .catch(error => {
+        console.error('Request failed:', error);
+        return new Response('Request failed', { status: 500 });
+      })
   );
 });
-
 
 // アクティベートイベントで古いキャッシュを削除
 self.addEventListener('activate', event => {
