@@ -15,61 +15,41 @@ const urlsToCache = [
 // インストールイベント
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => {
-        return cache.addAll(urlsToCache);
-      })
-      .catch(error => {
-        console.error('Failed to cache resources:', error);
+      caches.open(CACHE_NAME).then(cache => {
+          return cache.addAll(urlsToCache);
       })
   );
-  self.skipWaiting(); // 即座に新しい SW を有効化
+  self.skipWaiting(); // 即座に新しいサービスワーカーを有効化
 });
 
 // フェッチイベント
 self.addEventListener('fetch', event => {
-  if (event.request.method === 'POST') {
-      // POST リクエストはそのままネットワークへ
-      event.respondWith(fetch(event.request));
-      return;
-  }
-
   event.respondWith(
-      caches.match(event.request).then(cachedResponse => {
-          // キャッシュが存在する場合でもネットワークリクエストを試みる
-          const fetchRequest = fetch(event.request).then(networkResponse => {
-              // ネットワークリクエストが成功したらキャッシュを更新
-              return caches.open(CACHE_NAME).then(cache => {
-                  cache.put(event.request, networkResponse.clone());
-                  return networkResponse;
-              });
-          }).catch(() => {
-              // ネットワークエラーの場合はキャッシュを返す
-              return cachedResponse || new Response('Offline', { status: 503 });
+      fetch(event.request).then(networkResponse => {
+          // ネットワークレスポンスをキャッシュに保存
+          return caches.open(CACHE_NAME).then(cache => {
+              cache.put(event.request, networkResponse.clone());
+              return networkResponse;
           });
-
-          // キャッシュが存在すれば即座に返しつつ、バックグラウンドで更新
-          return cachedResponse || fetchRequest;
+      }).catch(() => {
+          // ネットワークエラー時にキャッシュを返す
+          return caches.match(event.request);
       })
   );
 });
 
-
-// 古いキャッシュを削除するためのアクティベートイベント
 self.addEventListener('activate', event => {
   event.waitUntil(
       caches.keys().then(cacheNames => {
           return Promise.all(
               cacheNames.map(cacheName => {
                   if (cacheName !== CACHE_NAME) {
-                      console.log('Deleting old cache:', cacheName);
-                      return caches.delete(cacheName);
+                      return caches.delete(cacheName); // 古いキャッシュを削除
                   }
               })
           );
       })
   );
-  self.clients.claim(); // 新しい SW がすぐに制御を開始
+  self.clients.claim(); // ページの制御を新しいサービスワーカーが引き継ぐ
 });
-
 
