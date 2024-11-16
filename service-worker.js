@@ -19,11 +19,15 @@ self.addEventListener('install', event => {
       return cache.addAll(urlsToCache);
     })
   );
+  console.log('Installed and opened cache:', CACHE_NAME); // デバッグ用
   self.skipWaiting(); // 即座に新しいサービスワーカーを有効化
 });
 
 // フェッチイベント
 self.addEventListener('fetch', event => {
+  caches.keys().then(keys => {
+    console.log('Current caches during fetch:', keys); // デバッグ用
+  });
   if (event.request.method === 'POST') {
     // POST リクエストをキャッシュせず直接ネットワークへ送信
     event.respondWith(fetch(event.request.clone()));
@@ -56,6 +60,7 @@ self.addEventListener('fetch', event => {
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(cacheNames => {
+      caches.keys().then(keys => console.log('Caches:', keys));
       return Promise.all(
         cacheNames.map(cacheName => {
           if (cacheName !== CACHE_NAME) {
