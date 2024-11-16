@@ -46,18 +46,13 @@ self.addEventListener('fetch', event => {
 
   // GET リクエストの処理（コメントアウトした部分）
   event.respondWith(
-    caches.match(event.request).then(cachedResponse => {
-      return cachedResponse || fetch(event.request).then(networkResponse => {
-        return caches.open(CACHE_NAME).then(cache => {
-          if (event.request.method === 'GET') {
-            // キャッシュの更新処理
-            cache.put(event.request, networkResponse.clone());
-          }
-          return networkResponse;
-        });
+    fetch(event.request).then(networkResponse => {
+      return caches.open(CACHE_NAME).then(cache => {
+        cache.put(event.request, networkResponse.clone());  // 最新のレスポンスをキャッシュ
+        return networkResponse;
       });
     }).catch(() => {
-      return new Response('Offline or error occurred', { status: 503 });
+      return caches.match(event.request);  // ネットワークにアクセスできない場合はキャッシュから返す
     })
   );
 });
