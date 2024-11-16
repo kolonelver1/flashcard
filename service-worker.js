@@ -29,7 +29,8 @@ self.addEventListener('install', event => {
 // フェッチイベント
 self.addEventListener('fetch', event => {
   if (event.request.method === 'POST') {
-      // POSTリクエストはキャッシュせず直接ネットワークへ
+      // POSTリクエストは直接ネットワークへ
+      event.respondWith(fetch(event.request));
       return;
   }
   event.respondWith(
