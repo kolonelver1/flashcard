@@ -23,7 +23,6 @@ self.addEventListener('install', event => {
   self.skipWaiting(); // 即座に新しいサービスワーカーを有効化
 });
 
-// フェッチイベント
 self.addEventListener('fetch', event => {
   console.log('Fetching:', event.request.url, 'Method:', event.request.method);
 
@@ -33,14 +32,20 @@ self.addEventListener('fetch', event => {
     event.respondWith(
       fetch(event.request.clone())  // POSTリクエストはキャッシュしない
         .then(response => {
-          // レスポンスを複製し、ヘッダーを設定
-          const clonedResponse = response.clone();
-          clonedResponse.headers.set('Access-Control-Allow-Origin', '*');  // 任意のオリジンを許可
-          clonedResponse.headers.set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');  // 許可するメソッド
-          clonedResponse.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');  // 許可するヘッダー
+          // 新しいレスポンスを作成し、ヘッダーを設定
+          const clonedResponse = new Response(response.body, {
+            status: response.status,
+            statusText: response.statusText,
+            headers: {
+              ...response.headers,
+              'Access-Control-Allow-Origin': '*',  // 任意のオリジンを許可
+              'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',  // 許可するメソッド
+              'Access-Control-Allow-Headers': 'Content-Type, Authorization',  // 許可するヘッダー
+            }
+          });
 
           console.log('POST request successful:', event.request.url);
-          return clonedResponse;
+          return clonedResponse;  // 新しいレスポンスを返す
         })
         .catch(error => {
           console.error('POST request failed:', error);
@@ -54,10 +59,17 @@ self.addEventListener('fetch', event => {
   event.respondWith(
     fetch(event.request)
       .then(response => {
-        const clonedResponse = response.clone();
-        clonedResponse.headers.set('Access-Control-Allow-Origin', '*');
-        clonedResponse.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-        clonedResponse.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+        // 新しいレスポンスを作成し、ヘッダーを設定
+        const clonedResponse = new Response(response.body, {
+          status: response.status,
+          statusText: response.statusText,
+          headers: {
+            ...response.headers,
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          }
+        });
         return clonedResponse;
       })
       .catch(error => {
