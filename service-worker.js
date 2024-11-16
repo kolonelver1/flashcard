@@ -2,73 +2,65 @@
 
 const CACHE_NAME = 'flashcard-cache-v1'; // キャッシュ名をバージョン管理
 const urlsToCache = [
-  '/flashcard/',             // ルート (GitHub Pagesではリポジトリ名を考慮)
-  '/flashcard/index.html',   // HTML
-  '/flashcard/styles.css',   // CSS
-  '/flashcard/script.js',    // JavaScript
-  '/flashcard/manifest.json',// PWAのマニフェスト
-  '/flashcard/icon.png',     // アイコン
-  '/flashcard/icon512.png',  // 大きいアイコン
-  '/flashcard/favicon.ico'   // ファビコン
+  '/flashcard/',
+  '/flashcard/index.html',
+  '/flashcard/styles.css',
+  '/flashcard/script.js',
+  '/flashcard/manifest.json',
+  '/flashcard/icon.png',
+  '/flashcard/icon512.png',
+  '/flashcard/favicon.ico'
 ];
 
 // インストールイベント
 self.addEventListener('install', event => {
   event.waitUntil(
-      caches.open(CACHE_NAME).then(cache => {
-          return cache.addAll(urlsToCache);
-      })
+    caches.open(CACHE_NAME).then(cache => {
+      return cache.addAll(urlsToCache);
+    })
   );
-  self.skipWaiting(); // 即座に新しいサービスワーカーを有効化
+  self.skipWaiting(); // 新しいサービスワーカーを即座に有効化
 });
 
 // フェッチイベント
 self.addEventListener('fetch', event => {
-  // POST リクエストをキャッシュせずに直接ネットワークへ送信
   if (event.request.method === 'POST') {
-      event.respondWith(
-          fetch(event.request.clone())
-              .then(response => {
-                  // 正常なレスポンスをそのまま返す
-                  return response;
-              })
-              .catch(error => {
-                  console.error('POST request failed:', error);
-                  return new Response('POST request failed', { status: 500 });
-              })
-      );
-      return;
+    // POST リクエストをキャッシュせず直接ネットワークへ送信
+    event.respondWith(fetch(event.request.clone()));
+    return;
   }
 
-  // GET リクエストに対してキャッシュ処理を実行
+  // GET リクエストに対してキャッシュ処理
   event.respondWith(
-      caches.match(event.request).then(cachedResponse => {
-          return cachedResponse || fetch(event.request).then(networkResponse => {
-              return caches.open(CACHE_NAME).then(cache => {
-                  if (event.request.method === 'GET') {
-                      cache.put(event.request, networkResponse.clone());
-                  }
-                  return networkResponse;
-              });
+    caches.match(event.request).then(cachedResponse => {
+      return (
+        cachedResponse ||
+        fetch(event.request).then(networkResponse => {
+          return caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, networkResponse.clone());
+            return networkResponse;
           });
-      }).catch(() => {
-          return new Response('Offline or error occurred', { status: 503 });
-      })
+        })
+      );
+    })
   );
 });
 
+// アクティベートイベントで古いキャッシュを削除
 self.addEventListener('activate', event => {
   event.waitUntil(
-      caches.keys().then(cacheNames => {
-          return Promise.all(
-              cacheNames.map(cacheName => {
-                  if (cacheName !== CACHE_NAME) {
-                      return caches.delete(cacheName); // 古いキャッシュを削除
-                  }
-              })
-          );
-      })
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cacheName => {
+          if (cacheName !== CACHE_NAME) {
+            console.log('Deleting old cache:', cacheName);
+            return caches.delete(cacheName); // 古いキャッシュを削除
+          }
+        })
+      );
+    })
   );
-  self.clients.claim(); // ページの制御を新しいサービスワーカーが引き継ぐ
+  self.clients.claim(); // ページ制御を新しい SW に移行
 });
+
 
