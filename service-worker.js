@@ -32,16 +32,18 @@ self.addEventListener('fetch', event => {
     event.respondWith(
       fetch(event.request.clone())  // POSTリクエストはキャッシュしない
         .then(response => {
-          // 新しいレスポンスを作成し、ヘッダーを設定
+          // レスポンスのヘッダーをコピー
+          const headers = new Headers(response.headers);
+          // 新しいヘッダーを追加
+          headers.set('Access-Control-Allow-Origin', '*');  // 任意のオリジンを許可
+          headers.set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');  // 許可するメソッド
+          headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');  // 許可するヘッダー
+
+          // 新しいレスポンスを作成
           const clonedResponse = new Response(response.body, {
             status: response.status,
             statusText: response.statusText,
-            headers: {
-              ...response.headers,
-              'Access-Control-Allow-Origin': '*',  // 任意のオリジンを許可
-              'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',  // 許可するメソッド
-              'Access-Control-Allow-Headers': 'Content-Type, Authorization',  // 許可するヘッダー
-            }
+            headers: headers  // 修正したヘッダーを設定
           });
 
           console.log('POST request successful:', event.request.url);
@@ -59,17 +61,20 @@ self.addEventListener('fetch', event => {
   event.respondWith(
     fetch(event.request)
       .then(response => {
-        // 新しいレスポンスを作成し、ヘッダーを設定
+        // レスポンスのヘッダーをコピー
+        const headers = new Headers(response.headers);
+        // 新しいヘッダーを追加
+        headers.set('Access-Control-Allow-Origin', '*');
+        headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+        headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+        // 新しいレスポンスを作成
         const clonedResponse = new Response(response.body, {
           status: response.status,
           statusText: response.statusText,
-          headers: {
-            ...response.headers,
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-          }
+          headers: headers  // 修正したヘッダーを設定
         });
+
         return clonedResponse;
       })
       .catch(error => {
