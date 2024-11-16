@@ -18,9 +18,19 @@ const allowedOrigins = ['https://kolonelver1.github.io'];  // 許可するオリ
 // CORSの設定（OPTIONSリクエストに対しても適切に対応）
 app.options('*', cors());  // 全てのリソースに対してOPTIONSリクエストを受け付ける
 app.use(cors({
-  origin: allowedOrigins,  // 特定のオリジンを指定
+  origin: (origin, callback) => {
+    // リクエスト元のオリジンが許可されているかをチェック
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);  // 許可されたオリジンの場合
+    } else {
+      callback(new Error('Not allowed by CORS'));  // 許可されていないオリジンの場合
+    }
+  },
   methods: ['GET', 'POST', 'OPTIONS'],  // 許可するメソッド
+  allowedHeaders: ['Content-Type', 'Authorization'],  // 許可するヘッダー
+  credentials: true,  // 認証情報（クッキーなど）を許可
 }));
+
 app.use(bodyParser.json());  // JSONデータをパースするミドルウェア
 
 // サーバータイムアウト設定を60秒に
