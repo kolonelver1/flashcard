@@ -29,25 +29,31 @@ self.addEventListener('install', event => {
 // フェッチイベント
 self.addEventListener('fetch', event => {
   if (event.request.method === 'POST') {
-      // POSTリクエストは直接ネットワークへ
+      // POST リクエストはそのままネットワークへ
       event.respondWith(fetch(event.request));
       return;
   }
+
   event.respondWith(
-      caches.match(event.request)
-          .then(cachedResponse => {
-              if (cachedResponse) {
-                  return cachedResponse;
-              }
-              return fetch(event.request).then(networkResponse => {
-                  return caches.open(CACHE_NAME).then(cache => {
-                      cache.put(event.request, networkResponse.clone());
-                      return networkResponse;
-                  });
+      caches.match(event.request).then(cachedResponse => {
+          // キャッシュが存在する場合でもネットワークリクエストを試みる
+          const fetchRequest = fetch(event.request).then(networkResponse => {
+              // ネットワークリクエストが成功したらキャッシュを更新
+              return caches.open(CACHE_NAME).then(cache => {
+                  cache.put(event.request, networkResponse.clone());
+                  return networkResponse;
               });
-          })
+          }).catch(() => {
+              // ネットワークエラーの場合はキャッシュを返す
+              return cachedResponse || new Response('Offline', { status: 503 });
+          });
+
+          // キャッシュが存在すれば即座に返しつつ、バックグラウンドで更新
+          return cachedResponse || fetchRequest;
+      })
   );
 });
+
 
 // 古いキャッシュを削除するためのアクティベートイベント
 self.addEventListener('activate', event => {
