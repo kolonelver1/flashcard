@@ -19,7 +19,7 @@ self.addEventListener('install', event => {
       return cache.addAll(urlsToCache);
     })
   );
-  self.skipWaiting(); // 新しいサービスワーカーを即座に有効化
+  self.skipWaiting(); // 即座に新しいサービスワーカーを有効化
 });
 
 // フェッチイベント
@@ -37,7 +37,13 @@ self.addEventListener('fetch', event => {
         cachedResponse ||
         fetch(event.request).then(networkResponse => {
           return caches.open(CACHE_NAME).then(cache => {
-            cache.put(event.request, networkResponse.clone());
+            // 静的リソースのみキャッシュ（キャッシュすべきリソースを限定）
+            if (
+              event.request.url.includes('/flashcard/') && 
+              !event.request.url.includes('/api/')
+            ) {
+              cache.put(event.request, networkResponse.clone());
+            }
             return networkResponse;
           });
         })
@@ -62,5 +68,3 @@ self.addEventListener('activate', event => {
   );
   self.clients.claim(); // ページ制御を新しい SW に移行
 });
-
-
