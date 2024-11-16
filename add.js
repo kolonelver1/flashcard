@@ -8,18 +8,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     const apiUrl = 'https://my-flashcard-52952319bda7.herokuapp.com/api/flashcards';
 
 
-const response = await fetch(apiUrl, {
-  // 自己署名証明書のエラーを無視する場合、以下のオプションを追加することも可能
-  // credentials: 'same-origin',  // Cookieなどを必要とする場合
-  headers: {
-    'Content-Type': 'application/json',
-    // 必要ならばAuthorizationヘッダーを追加
-  },
-});
+    const response = await fetch(apiUrl, {
+      // 自己署名証明書のエラーを無視する場合、以下のオプションを追加することも可能
+      // credentials: 'same-origin',  // Cookieなどを必要とする場合
+      headers: {
+        'Content-Type': 'application/json',
+        // 必要ならばAuthorizationヘッダーを追加
+      },
+    });
 
-if (!response.ok) {
-  throw new Error(`HTTP error! status: ${response.status}`);
-}
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
 
     flashcards = await response.json();
     console.log(flashcards); // コンソールで取得したデータを確認
@@ -79,7 +79,7 @@ if (!response.ok) {
       // コンテナに要素を追加
       quizContainer.appendChild(checkbox);
       quizContainer.appendChild(label);
-      
+
       answerContainer.appendChild(answerLabel);
 
       // deleteFormにコンテナを追加
@@ -133,7 +133,7 @@ if (!response.ok) {
       // コンテナに要素を追加
       quizContainer.appendChild(checkbox);
       quizContainer.appendChild(label);
-      
+
       answerContainer.appendChild(answerLabel);
 
       // deleteFormにコンテナを追加
@@ -251,7 +251,7 @@ if (!response.ok) {
       };
 
       // サーバーに新しいフラッシュカードを追加するリクエスト
-      fetch('http://localhost:3000/api/flashcards', {
+      fetch('https://my-flashcard-52952319bda7.herokuapp.com/api/flashcards', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -302,7 +302,7 @@ if (!response.ok) {
     }
 
     // サーバーにデータを送信
-    fetch('https://localhost:3000/delete', { // ポートをサーバー側と一致させる
+    fetch('https://my-flashcard-52952319bda7.herokuapp.com/delete', { // ポートをサーバー側と一致させる
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

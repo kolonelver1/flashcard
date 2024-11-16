@@ -258,8 +258,3 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-// HTTPSサーバーの起動
-// サーバーの起動処理
-// https.createServer(options, app).listen(PORT, () => {
-//   console.log(`Server is running on port ${PORT}`);
-// });
