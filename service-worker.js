@@ -33,11 +33,11 @@ self.addEventListener('fetch', event => {
     event.respondWith(
       fetch(event.request.clone())  // POSTリクエストはキャッシュしない
         .then(response => {
-          // レスポンスを複製し、ヘッダーを変更
+          // レスポンスを複製し、ヘッダーを設定
           const clonedResponse = response.clone();
-          clonedResponse.headers.append('Access-Control-Allow-Origin', '*');  // 任意のオリジンを許可
-          clonedResponse.headers.append('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');  // 許可するメソッド
-          clonedResponse.headers.append('Access-Control-Allow-Headers', 'Content-Type, Authorization');  // 許可するヘッダー
+          clonedResponse.headers.set('Access-Control-Allow-Origin', '*');  // 任意のオリジンを許可
+          clonedResponse.headers.set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');  // 許可するメソッド
+          clonedResponse.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');  // 許可するヘッダー
 
           console.log('POST request successful:', event.request.url);
           return clonedResponse;
@@ -55,9 +55,9 @@ self.addEventListener('fetch', event => {
     fetch(event.request)
       .then(response => {
         const clonedResponse = response.clone();
-        clonedResponse.headers.append('Access-Control-Allow-Origin', '*');
-        clonedResponse.headers.append('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-        clonedResponse.headers.append('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+        clonedResponse.headers.set('Access-Control-Allow-Origin', '*');
+        clonedResponse.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+        clonedResponse.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
         return clonedResponse;
       })
       .catch(error => {
