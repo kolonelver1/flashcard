@@ -25,33 +25,34 @@ self.addEventListener('install', event => {
 
 // フェッチイベント
 self.addEventListener('fetch', event => {
-  caches.keys().then(keys => {
-    console.log('Current caches during fetch:', keys); // デバッグ用
-  });
   if (event.request.method === 'POST') {
-    // POST リクエストをキャッシュせず直接ネットワークへ送信
-    event.respondWith(fetch(event.request.clone()));
+    event.respondWith(
+      fetch(event.request.clone())  // POST リクエストはキャッシュしない
+        .then(response => {
+          return response;
+        })
+        .catch(error => {
+          console.error('POST request failed:', error);
+          return new Response('POST request failed', { status: 500 });
+        })
+    );
     return;
   }
 
-  // GET リクエストに対してキャッシュ処理
+  // GET リクエストのキャッシュ処理
   event.respondWith(
     caches.match(event.request).then(cachedResponse => {
-      return (
-        cachedResponse ||
-        fetch(event.request).then(networkResponse => {
-          return caches.open(CACHE_NAME).then(cache => {
-            // 静的リソースのみキャッシュ（キャッシュすべきリソースを限定）
-            if (
-              event.request.url.includes('/flashcard/') && 
-              !event.request.url.includes('/api/')
-            ) {
-              cache.put(event.request, networkResponse.clone());
-            }
-            return networkResponse;
-          });
-        })
-      );
+      return cachedResponse || fetch(event.request).then(networkResponse => {
+        return caches.open(CACHE_NAME).then(cache => {
+          if (event.request.method === 'GET') {
+            // キャッシュの更新処理
+            cache.put(event.request, networkResponse.clone());
+          }
+          return networkResponse;
+        });
+      });
+    }).catch(() => {
+      return new Response('Offline or error occurred', { status: 503 });
     })
   );
 });
