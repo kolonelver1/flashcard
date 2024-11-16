@@ -25,36 +25,43 @@ self.addEventListener('install', event => {
 
 // フェッチイベント
 self.addEventListener('fetch', event => {
+  console.log('Fetching:', event.request.url, 'Method:', event.request.method);  // 追加：リクエストのメソッドとURLをログに出力
+
+  if (event.request.method === 'POST') {
+    console.log('Handling POST request:', event.request.url); // POSTリクエストを確認
+
+    event.respondWith(
+      fetch(event.request.clone())  // POSTリクエストはキャッシュしない
+        .then(response => {
+          console.log('POST request successful:', event.request.url);  // 成功時のログ
+          return response;
+        })
+        .catch(error => {
+          console.error('POST request failed:', error);
+          return new Response('POST request failed', { status: 500 });
+        })
+    );
+    return;
+  }
+
+  // GET リクエストの処理（コメントアウトした部分）
   event.respondWith(
-    fetch(event.request.clone())  // POST リクエストはキャッシュしない
-      .then(response => {
-        return response;
-      })
-      .catch(error => {
-        console.error('POST request failed:', error);
-        return new Response('POST request failed', { status: 500 });
-      })
+    caches.match(event.request).then(cachedResponse => {
+      return cachedResponse || fetch(event.request).then(networkResponse => {
+        return caches.open(CACHE_NAME).then(cache => {
+          if (event.request.method === 'GET') {
+            // キャッシュの更新処理
+            cache.put(event.request, networkResponse.clone());
+          }
+          return networkResponse;
+        });
+      });
+    }).catch(() => {
+      return new Response('Offline or error occurred', { status: 503 });
+    })
   );
-  return;
-
-
-  // // GET リクエストのキャッシュ処理
-  // event.respondWith(
-  //   caches.match(event.request).then(cachedResponse => {
-  //     return cachedResponse || fetch(event.request).then(networkResponse => {
-  //       return caches.open(CACHE_NAME).then(cache => {
-  //         if (event.request.method === 'GET') {
-  //           // キャッシュの更新処理
-  //           cache.put(event.request, networkResponse.clone());
-  //         }
-  //         return networkResponse;
-  //       });
-  //     });
-  //   }).catch(() => {
-  //     return new Response('Offline or error occurred', { status: 503 });
-  //   })
-  // );
 });
+
 
 // アクティベートイベントで古いキャッシュを削除
 self.addEventListener('activate', event => {
