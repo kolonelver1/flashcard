@@ -12,9 +12,15 @@ const PORT = process.env.PORT || 3000;  // Heroku環境ではポートを環境�
 
 app.get('/favicon.ico', (req, res) => res.status(204).end());
 
+const allowedOrigins = ['https://kolonelver1.github.io'];  // 許可するオリジン
+
 // ミドルウェアの設定
-app.use(cors());
-app.use(bodyParser.json());  // JSONデータのパース
+// CORSの設定（OPTIONSリクエストに対しても適切に対応）
+app.options('*', cors());  // 全てのリソースに対してOPTIONSリクエストを受け付ける
+app.use(cors({
+  origin: allowedOrigins,  // 特定のオリジンを指定
+  methods: ['GET', 'POST', 'OPTIONS'],  // 許可するメソッド
+}));
 
 // サーバータイムアウト設定を60秒に
 app.set('timeout', 60000); // 60秒
