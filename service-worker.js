@@ -10,6 +10,7 @@ const urlsToCache = [
   '/flashcard/add.js',
   '/flashcard/quiz.js',
   '/flashcard/answer.js',
+  '/flashcard/server.js',
   '/flashcard/styles.css',
   '/flashcard/script.js',
   '/flashcard/manifest.json',
