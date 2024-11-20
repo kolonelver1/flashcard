@@ -39,8 +39,8 @@ self.addEventListener('fetch', event => {
           // レスポンスのヘッダーをコピー
           const headers = new Headers(response.headers);
           // 新しいヘッダーを追加
-          headers.set('Access-Control-Allow-Origin', '*');  // 任意のオリジンを許可
-          headers.set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');  // 許可するメソッド
+          headers.set('Access-Control-Allow-Origin', 'https://kolonelver1.github.io');  // 任意のオリジンを許可
+          headers.set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE');  // 許可するメソッド
           headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');  // 許可するヘッダー
 
           // 新しいレスポンスを作成
