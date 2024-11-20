@@ -3,6 +3,7 @@
 body {
   margin-top: 10px;
   margin-left: 10px;
+  color: black;
 }
 
 #start {
@@ -15,7 +16,7 @@ body {
 select {
   width: 100px;
   height: 25px;
-  font-size: 13px;
+  font-size: 10px;
 }
 
 .answer-label {
