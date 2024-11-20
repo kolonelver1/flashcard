@@ -29,7 +29,7 @@ app.use(cors({
       callback(new Error(errorMessage));  // 許可されていないオリジンの場合、エラーを返す
     }
   },
-  methods: ['GET', 'POST', 'OPTIONS'],  // 許可するメソッド
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],   // 許可するメソッド
   allowedHeaders: ['Content-Type', 'Authorization'],  // 許可するヘッダー
   credentials: true,  // 認証情報（クッキーなど）を許可
 }));
