@@ -1,6 +1,8 @@
 //サービスワーカーの登録
 
 const CACHE_NAME = 'flashcard-cache-v1'; // キャッシュ名をバージョン管理
+
+//設定するファイルを選択
 const urlsToCache = [
   '/flashcard/index.html',
   '/flashcard/quiz.html',
@@ -27,6 +29,7 @@ self.addEventListener('install', event => {
   self.skipWaiting(); // 即座に新しいサービスワーカーを有効化
 });
 
+//フェッチイベント
 self.addEventListener('fetch', event => {
   console.log('Fetching:', event.request.url, 'Method:', event.request.method);
 
@@ -68,8 +71,8 @@ self.addEventListener('fetch', event => {
         // レスポンスのヘッダーをコピー
         const headers = new Headers(response.headers);
         // 新しいヘッダーを追加
-        headers.set('Access-Control-Allow-Origin', '*');
-        headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+        headers.set('Access-Control-Allow-Origin', 'https://kolonelver1.github.io');
+        headers.set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE');
         headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
         // 新しいレスポンスを作成
