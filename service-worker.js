@@ -36,26 +36,25 @@ self.addEventListener('fetch', event => {
 
   if (event.request.method === 'POST') {
     console.log('Handling POST request:', event.request.url);
-
+  
     event.respondWith(
-      fetch(event.request.clone())  // POSTリクエストはキャッシュしない
+      fetch(event.request.clone(), {
+        credentials: 'include'  // 認証情報を含める
+      })
         .then(response => {
-          // レスポンスのヘッダーをコピー
           const headers = new Headers(response.headers);
-          // 新しいヘッダーを追加
-          headers.set('Access-Control-Allow-Origin', 'https://kolonelver1.github.io');  // 任意のオリジンを許可
-          headers.set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE');  // 許可するメソッド
-          headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');  // 許可するヘッダー
-
-          // 新しいレスポンスを作成
+          headers.set('Access-Control-Allow-Origin', 'https://kolonelver1.github.io');
+          headers.set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE');
+          headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  
           const clonedResponse = new Response(response.body, {
             status: response.status,
             statusText: response.statusText,
-            headers: headers  // 修正したヘッダーを設定
+            headers: headers
           });
-
+  
           console.log('POST request successful:', event.request.url);
-          return clonedResponse;  // 新しいレスポンスを返す
+          return clonedResponse;
         })
         .catch(error => {
           console.error('POST request failed:', error);
@@ -63,33 +62,32 @@ self.addEventListener('fetch', event => {
         })
     );
     return;
-  }
+  }  
 
   // その他のリクエスト
   event.respondWith(
-    fetch(event.request)
+    fetch(event.request, {
+      credentials: 'include'  // 認証情報を含める
+    })
       .then(response => {
-        // レスポンスのヘッダーをコピー
         const headers = new Headers(response.headers);
-        // 新しいヘッダーを追加
         headers.set('Access-Control-Allow-Origin', 'https://kolonelver1.github.io');
         headers.set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE');
         headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-
-        // 新しいレスポンスを作成
+  
         const clonedResponse = new Response(response.body, {
           status: response.status,
           statusText: response.statusText,
-          headers: headers  // 修正したヘッダーを設定
+          headers: headers
         });
-
+  
         return clonedResponse;
       })
       .catch(error => {
         console.error('Request failed:', error);
         return new Response('Request failed', { status: 500 });
       })
-  );
+  );  
 });
 
 // アクティベートイベントで古いキャッシュを削除
