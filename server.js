@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 
 const app = express();
 const PORT = process.env.PORT || 3000;  // Heroku環境ではポートを環境変数から取得
