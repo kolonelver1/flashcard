@@ -30,6 +30,9 @@ app.use(cors({
 
 // プレフライトリクエスト（OPTIONS）に対する処理
 app.options('*', (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');  // 必要なオリジンを追加
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');  // 許可するメソッド
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept');  // 許可するヘッダー
   res.sendStatus(200);  // プレフライトリクエストに200 OKを返す
 });
 
