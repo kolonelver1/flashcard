@@ -5,11 +5,11 @@ const CACHE_NAME = 'flashcard-cache-v1'; // キャッシュ名をバージョン
 //設定するファイルを選択
 const urlsToCache = [
   '/flashcard/index.html',
-  // '/flashcard/quiz.html',
-  // '/flashcard/answer.html',
+  '/flashcard/quiz.html',
+  '/flashcard/answer.html',
   '/flashcard/add.js',
-  // '/flashcard/quiz.js',
-  // '/flashcard/answer.js',
+  '/flashcard/quiz.js',
+  '/flashcard/answer.js',
   '/flashcard/server.js',
   '/flashcard/styles.css',
   '/flashcard/script.js',
