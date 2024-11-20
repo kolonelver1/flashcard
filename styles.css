@@ -23,7 +23,7 @@ meta[name="format-detection"] {
 select {
   width: 100px;
   height: 25px;
-  font-size: 8px;
+  font-size: 20px;
 }
 
 .answer-label {
@@ -163,7 +163,7 @@ select {
   select {
     width: 300px;
     height: 100%;
-    font-size: 20px;
+    font-size: 30px;
     margin-right: 20px;
     padding-left: 10px;
     border: 3px solid #4f4f4ff1;
