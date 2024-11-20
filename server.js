@@ -17,19 +17,35 @@ const allowedOrigins = ['https://kolonelver1.github.io'];  // 許可するオリ
 // ミドルウェアの設定
 // CORSの設定（OPTIONSリクエストに対しても適切に対応）
 app.options('*', cors());  // 全てのリソースに対してOPTIONSリクエストを受け付ける
+
 app.use(cors({
   origin: (origin, callback) => {
     // リクエスト元のオリジンが許可されているかをチェック
     if (allowedOrigins.includes(origin) || !origin) {
       callback(null, true);  // 許可されたオリジンの場合
     } else {
-      callback(new Error('Not allowed by CORS'));  // 許可されていないオリジンの場合
+      const errorMessage = `CORS error: Origin ${origin} is not allowed`;
+      console.error(errorMessage);  // サーバーログにエラーを出力
+      callback(new Error(errorMessage));  // 許可されていないオリジンの場合、エラーを返す
     }
   },
   methods: ['GET', 'POST', 'OPTIONS'],  // 許可するメソッド
   allowedHeaders: ['Content-Type', 'Authorization'],  // 許可するヘッダー
   credentials: true,  // 認証情報（クッキーなど）を許可
 }));
+
+// エラーハンドリングミドルウェア
+app.use((err, req, res, next) => {
+  if (err) {
+    console.error('CORS Error:', err.message);
+    res.status(403).json({
+      error: 'Forbidden',
+      message: err.message,
+    });
+  } else {
+    next();
+  }
+});
 
 app.use(bodyParser.json());  // JSONデータをパースするミドルウェア
 
@@ -195,6 +211,7 @@ const updateNextStudyDate = (level) => {
 
 // フラッシュカードのレベルと次回学習日の更新エンドポイント
 app.put('/api/flashcards/:id', async (req, res) => {
+  console.log('PUT request received for cardId:', req.params.id);  // リクエスト受信時のログ
   const { id } = req.params;
   const { difficulty } = req.body;
 
