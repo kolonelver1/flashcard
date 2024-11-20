@@ -2,7 +2,6 @@
 
 const CACHE_NAME = 'flashcard-cache-v1'; // キャッシュ名をバージョン管理
 const urlsToCache = [
-  '/flashcard/',
   '/flashcard/index.html',
   '/flashcard/styles.css',
   '/flashcard/script.js',
