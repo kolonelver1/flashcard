@@ -60,40 +60,40 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // レベルを更新する関数
-async function updateLevel(cardId, difficulty) {
-  console.log(`Updating level for card ID: ${cardId}`);
-  console.log('Difficulty to send:', difficulty);
+  async function updateLevel(cardId, difficulty) {
+    console.log(`Updating level for card ID: ${cardId}`);
+    console.log('Difficulty to send:', difficulty);
 
-  // cardIdがMongoDBのObjectId形式かどうかを確認する
-  const uuidRegex = /^[0-9a-f]{24}$/i;
-  if (!uuidRegex.test(cardId)) {
-    console.error('Invalid cardId format');
-    return; // 不正なID形式の場合、処理を中止
-  }
-
-  try {
-    // PUTリクエスト
-    const response = await fetch(`https://my-flashcard-52952319bda7.herokuapp.com/api/flashcards/${cardId}`, {
-      method: 'PUT',  // データの更新
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ difficulty }),
-      mode: 'cors',  // CORSを有効にする
-      credentials: 'include',  // クッキーを含める
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+    // cardIdがMongoDBのObjectId形式かどうかを確認する
+    const uuidRegex = /^[0-9a-f]{24}$/i;
+    if (!uuidRegex.test(cardId)) {
+      console.error('Invalid cardId format');
+      return; // 不正なID形式の場合、処理を中止
     }
 
-    // 更新後のデータ取得
-    const updatedCard = await response.json();
-    console.log('Updated Flashcard:', updatedCard);
-  } catch (error) {
-    console.error('Error updating level:', error);
+    try {
+      // PUTリクエスト
+      const response = await fetch(`https://my-flashcard-52952319bda7.herokuapp.com/api/flashcards/${cardId}`, {
+        method: 'PUT',  // データの更新
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ difficulty }),
+        mode: 'cors',  // CORSを有効にする
+        credentials: 'include',  // クッキーを含める
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      // 更新後のデータ取得
+      const updatedCard = await response.json();
+      console.log('Updated Flashcard:', updatedCard);
+    } catch (error) {
+      console.error('Error updating level:', error);
+    }
   }
-}
 
   // レベル更新用の定義
   const ids = ["remake", "easy", "normal", "hard", "unknown"];
@@ -110,7 +110,7 @@ async function updateLevel(cardId, difficulty) {
     const element = document.getElementById(id);
     if (element) {
       element.addEventListener('click', async () => {
-        const difficulty = difficultyMap[id] || 'unknown';//idから難易度取得、デフォunknown
+        const difficulty = difficultyMap[id] || 'unknown'; //idから難易度取得、デフォunknown
 
         //取得データ0以上なら
         if (flashcards.length > 0) {
@@ -131,14 +131,14 @@ async function updateLevel(cardId, difficulty) {
             await updateLevel(currentCard._id, difficulty);
 
             // 更新後に問題ページへ遷移
-            // window.location.href = `quiz.html?date=${encodeURIComponent(dateParam)}`;
+            window.location.href = `quiz.html?date=${encodeURIComponent(dateParam)}`;
           } else {
             console.error('No matching flashcards found for updating level.');
           }
-          //ボタン要素がない場合
-          console.error(`Element with ID '${id}' not found`);
         }
       });
-    };
+    } else {
+      console.error(`Element with ID '${id}' not found`);
+    }
   });
 });
