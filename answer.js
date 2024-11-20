@@ -63,6 +63,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function updateLevel(cardId, difficulty) {
     console.log(`Updating level for card ID: ${cardId}`);
     console.log('Difficulty to send:', difficulty);
+    // cardIdがMongoDBのObjectId形式かどうかを確認する
+    const uuidRegex = /^[0-9a-f]{24}$/i;
+    if (!uuidRegex.test(cardId)) {
+      console.error('Invalid cardId format');
+      return; // 不正なID形式の場合、処理を中止
+    }
+
 
     try {
       //PUTリクエスト
