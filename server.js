@@ -3,7 +3,6 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-// const https = require('https'); // HTTPS通信が必要であれば復活
 
 // const fs = require('fs'); // SSL証明書を使用する場合復活
 

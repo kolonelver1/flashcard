@@ -64,6 +64,31 @@ self.addEventListener('fetch', event => {
     return;
   }  
 
+  if (event.request.method === 'PUT') {
+    console.log('Handling PUT request:', event.request.url);
+    // PUT専用の処理
+    event.respondWith(
+      fetch(event.request.clone(), {
+        credentials: 'include'  // 認証情報を含める
+      }).then(response => {
+        const headers = new Headers(response.headers);
+        headers.set('Access-Control-Allow-Origin', 'https://kolonelver1.github.io');
+        headers.set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE');
+        headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+        const clonedResponse = new Response(response.body, {
+          status: response.status,
+          statusText: response.statusText,
+          headers: headers
+        });
+        return clonedResponse;
+      }).catch(error => {
+        console.error('PUT request failed:', error);
+        return new Response('PUT request failed', { status: 500 });
+      })
+    );
+    return;
+  }
+
   // その他のリクエスト
   event.respondWith(
     fetch(event.request, {
