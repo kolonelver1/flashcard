@@ -30,7 +30,7 @@ app.use(cors({
     }
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],   // 許可するメソッド
-  allowedHeaders: ['Content-Type', 'Authorization'],  // 許可するヘッダー
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],  // 許可するヘッダー
   credentials: true,  // 認証情報（クッキーなど）を許可
 }));
 
