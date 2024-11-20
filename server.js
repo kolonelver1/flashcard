@@ -2,9 +2,9 @@
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
-const cors = require('cors');
 const mongoose = require('mongoose');
-// const https = require('https'); // HTTPS通信が必要であれば復活
+const https = require('https'); // HTTPS通信が必要であれば復活
+
 // const fs = require('fs'); // SSL証明書を使用する場合復活
 
 const app = express();
@@ -12,12 +12,8 @@ const PORT = process.env.PORT || 3000;  // Heroku環境ではポートを環境�
 
 app.get('/favicon.ico', (req, res) => res.status(204).end());
 
+const cors = require('cors');
 const allowedOrigins = ['https://kolonelver1.github.io'];  // 許可するオリジン
-
-// ミドルウェアの設定
-// CORSの設定（OPTIONSリクエストに対しても適切に対応）
- 
-// 全てのリソースに対してOPTIONSリクエストを受け付ける
 
 app.use(cors({
   origin: (origin, callback) => {
