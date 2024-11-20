@@ -4,8 +4,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
-// const fs = require('fs'); // SSL証明書を使用する場合復活
-
 const app = express();
 const PORT = process.env.PORT || 3000;  // Heroku環境ではポートを環境変数から取得
 
@@ -29,6 +27,12 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],  // 許可するヘッダー
   credentials: true,  // 認証情報（クッキーなど）を許可
 }));
+
+// プレフライトリクエスト（OPTIONS）に対する処理
+app.options('*', (req, res) => {
+  res.sendStatus(200);  // プレフライトリクエストに200 OKを返す
+});
+
 
 // エラーハンドリングミドルウェア
 app.use((err, req, res, next) => {

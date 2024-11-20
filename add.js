@@ -256,6 +256,8 @@ document.addEventListener('DOMContentLoaded', async () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(newFlashcard),
+        mode: 'cors',  // CORSを有効にする
+        credentials: 'include',  // クッキーを含める
       })
         .then(response => {
           if (!response.ok) {

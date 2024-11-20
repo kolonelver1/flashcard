@@ -73,6 +73,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         },
         body: JSON.stringify({ difficulty }),
         mode: 'cors',  // CORSを有効にする
+        credentials: 'include',  // クッキーを含める
       });
 
       if (!response.ok) {
