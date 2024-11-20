@@ -60,40 +60,40 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // レベルを更新する関数
-  async function updateLevel(cardId, difficulty) {
-    console.log(`Updating level for card ID: ${cardId}`);
-    console.log('Difficulty to send:', difficulty);
-    // cardIdがMongoDBのObjectId形式かどうかを確認する
-    const uuidRegex = /^[0-9a-f]{24}$/i;
-    if (!uuidRegex.test(cardId)) {
-      console.error('Invalid cardId format');
-      return; // 不正なID形式の場合、処理を中止
-    }
+async function updateLevel(cardId, difficulty) {
+  console.log(`Updating level for card ID: ${cardId}`);
+  console.log('Difficulty to send:', difficulty);
 
-
-    try {
-      //PUTリクエスト
-      const response = await fetch(`https://my-flashcard-52952319bda7.herokuapp.com/api/flashcards/${cardId}`, {
-        method: 'PUT', // データの更新
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ difficulty }),
-        mode: 'cors',  // CORSを有効にする
-        credentials: 'include',  // クッキーを含める
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      //更新後のデータ取得
-      const updatedCard = await response.json();
-      console.log('Updated Flashcard:', updatedCard);
-    } catch (error) {
-      console.error('Error updating level:', error);
-    }
+  // cardIdがMongoDBのObjectId形式かどうかを確認する
+  const uuidRegex = /^[0-9a-f]{24}$/i;
+  if (!uuidRegex.test(cardId)) {
+    console.error('Invalid cardId format');
+    return; // 不正なID形式の場合、処理を中止
   }
+
+  try {
+    // PUTリクエスト
+    const response = await fetch(`https://my-flashcard-52952319bda7.herokuapp.com/api/flashcards/${cardId}`, {
+      method: 'PUT',  // データの更新
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ difficulty }),
+      mode: 'cors',  // CORSを有効にする
+      credentials: 'include',  // クッキーを含める
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    // 更新後のデータ取得
+    const updatedCard = await response.json();
+    console.log('Updated Flashcard:', updatedCard);
+  } catch (error) {
+    console.error('Error updating level:', error);
+  }
+}
 
   // レベル更新用の定義
   const ids = ["remake", "easy", "normal", "hard", "unknown"];
