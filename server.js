@@ -16,7 +16,8 @@ const allowedOrigins = ['https://kolonelver1.github.io'];  // 許可するオリ
 
 // ミドルウェアの設定
 // CORSの設定（OPTIONSリクエストに対しても適切に対応）
-app.options('*', cors());  // 全てのリソースに対してOPTIONSリクエストを受け付ける
+ 
+// 全てのリソースに対してOPTIONSリクエストを受け付ける
 
 app.use(cors({
   origin: (origin, callback) => {
