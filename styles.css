@@ -77,14 +77,6 @@ input[type="checkbox"] {
   transform-origin: left center;  /* 左端を基準 */
 }
 
-.question-label,
-.answer-label {
-  display: block;
-  /* 改行を含むテキストを正しく扱う */
-  line-height: 1.5;
-  /* 改行後も読みやすく調整 */
-}
-
 .answer-label {
   margin-left: 10px;
 }
