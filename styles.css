@@ -7,9 +7,6 @@ body {
                     radial-gradient(circle, #afdfb3 10%, transparent 10%);
   background-size: 50px 50px; /* 水玉のサイズ */
   background-position: 0 0, 25px 25px; /* ドットの配置を交互に */
-}
-
-body {
   margin-top: 10px;
   margin-left: 10px;
 }
@@ -27,12 +24,13 @@ select {
   width: 100px;
   height: 25px;
   font-size: 15px;
+  border-radius: 20px;
+  margin-right: 10px;
 }
 
-#delete {
+.index.html button {
   background-color: rgb(47, 50, 60);
   color: white;
- margin-top: 10px;
 }
 
 #deleteForm {
@@ -44,6 +42,7 @@ select {
   display: flex;
   align-items: flex-start; /* 上端を揃える */
   background-color: white;
+  margin-bottom: 10px;
 }
 
 .question_0 {
@@ -58,25 +57,9 @@ select {
 
 .answer-label {
   margin-left: 20px;
-  margin-bottom: 10px;
 }
 
-/* #question-list {
-  margin-top: 15px;
-} */
-
-/* .answer-container {
-  margin-bottom: 10px;
-} */
-
-#mainQuiz {
-  height: 70px;
-  width: 250px;
-  padding: 5px;
-  font-size: 20px;
-}
-
-#mainAnswer {
+#mainQuiz,#mainAnswer {
   height: 70px;
   width: 250px;
   padding: 5px;
