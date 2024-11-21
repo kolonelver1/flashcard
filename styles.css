@@ -67,8 +67,9 @@ select {
   align-items: center;
   justify-content: flex-start; /* 左寄せ */
   color: white;
-  background-color: black;
-  margin-bottom: 10px;
+  background-color: rgb(37, 36, 36);
+  border-radius: 15px;
+  margin-bottom: 5px;
 }
 
 input[type="checkbox"] {
@@ -78,8 +79,6 @@ input[type="checkbox"] {
 
 .question-label,
 .answer-label {
-  text-align: left;
-  /* ラベル内のテキストを左揃え */
   display: block;
   /* 改行を含むテキストを正しく扱う */
   line-height: 1.5;
@@ -87,7 +86,7 @@ input[type="checkbox"] {
 }
 
 .answer-label {
-  margin-left: 5px;
+  margin-left: 10px;
 }
 
 .answer-label {
