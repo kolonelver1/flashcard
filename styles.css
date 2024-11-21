@@ -61,21 +61,19 @@ select {
   margin-top: 10px;
 }
 
-input[type="checkbox"] {
-  transform: scale(1.5); /* サイズを調整 */
-  margin-top: 2px; 
-  margin-left: 2px; 
-  margin-right: 2px;
-}
-
 #deleteForm .quiz-container,
 #deleteForm .answer-container {
   display: flex;
-  align-items: flex-start;
-  /* 上端を揃える */
+  align-items: center;
+  justify-content: flex-start; /* 左寄せ */
   color: white;
   background-color: black;
   margin-bottom: 10px;
+}
+
+input[type="checkbox"] {
+  transform: scale(1.5); /* サイズを調整 */
+  margin: 1px;
 }
 
 .question-label,
