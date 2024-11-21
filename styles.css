@@ -28,7 +28,7 @@ select {
   margin-right: 10px;
 }
 
-.index-html button {
+.index-page button {
   background-color: rgb(47, 50, 60);
   color: white;
   border-radius: 20px;
@@ -46,7 +46,7 @@ select {
   margin-bottom: 10px;
 }
 
-.question_0 {
+#question_0 {
   margin-right: 8px; /* チェックボックスとラベルの間隔を調整 */
 }
 
