@@ -29,6 +29,12 @@ select {
   font-size: 15px;
 }
 
+#delete {
+  background-color: rgb(47, 50, 60);
+  color: white;
+ margin-top: 10px;
+}
+
 #deleteForm {
   margin-top: 10px;
 }
@@ -37,6 +43,7 @@ select {
 #deleteForm .answer-container {
   display: flex;
   align-items: flex-start; /* 上端を揃える */
+  background-color: white;
 }
 
 .question_0 {
@@ -44,16 +51,15 @@ select {
 }
 
 .question-label,.answer-label {
- background-color: white;
  text-align: left; /* ラベル内のテキストを左揃え */
  display: block; /* 改行を含むテキストを正しく扱う */
  line-height: 1.5; /* 改行後も読みやすく調整 */
 }
 
-/* .answer-label {
+.answer-label {
   margin-left: 20px;
   margin-bottom: 30px;
-} */
+}
 
 /* #question-list {
   margin-top: 15px;
@@ -180,15 +186,15 @@ select {
   }
 
   /* 取得後 */
-  #deleteForm {
+  /* #deleteForm {
     display: block;
     margin-top: 30px;
     font-size: 45px;
     height: auto;
     width: auto;
-  }
+  } */
 
-  #question-list {
+  /* #question-list {
     margin-top: 45px;
   }
 
@@ -210,7 +216,7 @@ select {
   .answer-container {
     width: 100%;
     margin-bottom: 30px;
-  }
+  } */
 
   main {
     display: flex;
