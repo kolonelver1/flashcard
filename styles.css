@@ -29,26 +29,39 @@ select {
   font-size: 15px;
 }
 
-.question-label,.answer-label {
- background-color: white;
-}
-
-.answer-label {
-  margin-left: 20px;
-  margin-bottom: 30px;
-}
-
-#question-list {
-  margin-top: 15px;
-}
-
 #deleteForm {
   margin-top: 10px;
 }
 
-.answer-container {
-  margin-bottom: 10px;
+#deleteForm .quiz-container,
+#deleteForm .answer-container {
+  display: flex;
+  align-items: flex-start; /* 上端を揃える */
 }
+
+.question_0 {
+  margin-right: 8px; /* チェックボックスとラベルの間隔を調整 */
+}
+
+.question-label,.answer-label {
+ background-color: white;
+ text-align: left; /* ラベル内のテキストを左揃え */
+ display: block; /* 改行を含むテキストを正しく扱う */
+ line-height: 1.5; /* 改行後も読みやすく調整 */
+}
+
+/* .answer-label {
+  margin-left: 20px;
+  margin-bottom: 30px;
+} */
+
+/* #question-list {
+  margin-top: 15px;
+} */
+
+/* .answer-container {
+  margin-bottom: 10px;
+} */
 
 #mainQuiz {
   height: 70px;
@@ -181,7 +194,7 @@ select {
 
   .question-label {
     margin-left: 60px;
-    margin-bottom: 90px;
+    margin-bottom: 40px;
   }
 
   .answer-label {
