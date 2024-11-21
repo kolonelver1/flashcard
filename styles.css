@@ -58,7 +58,7 @@ select {
 
 .answer-label {
   margin-left: 20px;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 }
 
 /* #question-list {
@@ -152,7 +152,7 @@ select {
     margin-top: 30px;
     margin-bottom: 30px;
     padding-bottom: 30px;
-    border-bottom: 3px solid #4f4f4ff1;
+    /* border-bottom: 3px solid #4f4f4ff1; */
   }
 
   #quiz,
@@ -167,12 +167,12 @@ select {
     border-radius: 20px;
   }
 
-  form {
+  /* form {
     display: flex;
     align-items: center;
     height: 90px;
     margin-bottom: 20px;
-  }
+  } */
 
   select {
     background-color: rgb(47, 50, 60);
@@ -185,14 +185,11 @@ select {
     border: 3px solid #4f4f4ff1;
   }
 
-  /* 取得後 */
-  /* #deleteForm {
-    display: block;
-    margin-top: 30px;
+  /* 取得後 */ */
+   #deleteForm {
+    /* display: block; */
     font-size: 45px;
-    height: auto;
-    width: auto;
-  } */
+  }
 
   /* #question-list {
     margin-top: 45px;
