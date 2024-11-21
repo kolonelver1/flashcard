@@ -68,7 +68,7 @@ select {
   justify-content: flex-start; /* 左寄せ */
   color: white;
   background-color: rgb(37, 36, 36);
-  border-radius: 15px;
+  border-radius: 0 15px 15px 0; /* 左上, 右上, 右下, 左下の順 */
   margin-bottom: 5px;
 }
 
@@ -77,7 +77,7 @@ input[type="checkbox"] {
   transform-origin: left center;  /* 左端を基準 */
 }
 
-.answer-label {
+.question-label {
   margin-left: 10px;
 }
 
