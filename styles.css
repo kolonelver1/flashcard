@@ -61,6 +61,11 @@ select {
   margin-top: 10px;
 }
 
+input[type="checkbox"] {
+  transform: scale(1.5); /* サイズを調整 */
+  margin: 1px; /* スペースを調整（オプション） */
+}
+
 #deleteForm .quiz-container,
 #deleteForm .answer-container {
   display: flex;
@@ -69,12 +74,6 @@ select {
   color: white;
   background-color: black;
   margin-bottom: 10px;
-}
-
-#question_0 {
-  margin-right: 9px;
-  /* チェックボックスとラベルの間隔を調整 */
-  transform: scale(1.5); /* サイズを1.5倍に拡大 */
 }
 
 .question-label,
@@ -183,15 +182,15 @@ select {
     font-size: 45px;
   }
 
-  #question_0 {
-    margin-right: 9px;
-    /* チェックボックスとラベルの間隔を調整 */
-    transform: scale(5); /* サイズを1.5倍に拡大 */
-  }
-
   .question-container,.answer-container {
     font-size: 45px;
   }
+
+  input[type="checkbox"] {
+    transform: scale(3); /* サイズを調整 */
+    margin: 1px; /* スペースを調整（オプション） */
+  }
+  
 
   /* #question-list {
     margin-top: 45px;
