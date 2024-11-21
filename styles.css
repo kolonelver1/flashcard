@@ -63,7 +63,9 @@ select {
 
 input[type="checkbox"] {
   transform: scale(1.5); /* サイズを調整 */
-  margin: 1px; /* スペースを調整（オプション） */
+  margin-top: 2px; 
+  margin-left: 2px; 
+  margin-right: 2px;
 }
 
 #deleteForm .quiz-container,
@@ -186,11 +188,9 @@ input[type="checkbox"] {
     font-size: 45px;
   }
 
-  input[type="checkbox"] {
-    transform: scale(3); /* サイズを調整 */
-    margin: 1px; /* スペースを調整（オプション） */
+  .answer-label {
+    margin-left: 22px;
   }
-  
 
   /* #question-list {
     margin-top: 45px;
