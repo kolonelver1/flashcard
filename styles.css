@@ -82,7 +82,7 @@ input[type="checkbox"] {
 }
 
 .answer-label {
-  margin-left: 25px;
+  margin-left: 30px;
 }
 
 #mainQuiz,
@@ -185,12 +185,12 @@ input[type="checkbox"] {
     transform: scale(2.5); /* サイズを調整 */
   }
 
-  .answer-label {
-    margin-left: 10px;
+  .question-label {
+    margin-left: 15px;
   }
 
   .answer-label {
-    margin-left: 30px;
+    margin-left: 40px;
   }
 
   /* #question-list {
