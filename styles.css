@@ -11,6 +11,10 @@ body {
   margin-left: 10px;
 }
 
+#add-form {
+  height: 60px;
+}
+
 #quiz-text,#answer-text {
   height: 100%;
 }
@@ -32,15 +36,15 @@ select {
   width: 100px;
   height: 25px;
   font-size: 15px;
-  border-radius: 20px;
-  margin-right: 10px;
+  border-radius: 15px;
+  margin-right: 5px;
 }
 
 .index-page button {
   background-color: rgb(47, 50, 60);
   color: white;
-  border-radius: 20px;
-  padding: auto;
+  border-radius: 15px;
+  padding: 5px;
 }
 
 #deleteForm {
