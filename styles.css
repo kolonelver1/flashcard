@@ -74,6 +74,7 @@ select {
 #question_0 {
   margin-right: 9px;
   /* チェックボックスとラベルの間隔を調整 */
+  transform: scale(1.5); /* サイズを1.5倍に拡大 */
 }
 
 .question-label,
@@ -183,8 +184,9 @@ select {
   }
 
   #question_0 {
-    margin-right: 8px;
+    margin-right: 9px;
     /* チェックボックスとラベルの間隔を調整 */
+    transform: scale(5); /* サイズを1.5倍に拡大 */
   }
 
   .question-container,.answer-container {
