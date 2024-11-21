@@ -14,13 +14,14 @@ body {
 #add-form {
   display: flex;
   height: 60px;
+  margin-bottom: 5px;
 }
 
 #quiz-text,#answer-text {
   height: 100%;
   width: 300px;
   margin-right: 5px;
-  border: 4px solid #4f4f4ff1;
+  border: 3px solid #4f4f4ff1;
 }
 
 #start {
@@ -60,7 +61,8 @@ select {
 #deleteForm .answer-container {
   display: flex;
   align-items: flex-start; /* 上端を揃える */
-  background-color: white;
+  color: white;
+  background-color: black;
   margin-bottom: 10px;
 }
 
@@ -83,6 +85,7 @@ select {
   width: 250px;
   padding: 5px;
   font-size: 20px;
+  border: 3px solid #4f4f4ff1;
 }
 
 .post {
@@ -95,6 +98,7 @@ select {
   width: 120px;
   background-color: rgb(47, 50, 60);
   color: white;
+  margin-right: 5px;
 }
 
 
