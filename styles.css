@@ -186,11 +186,11 @@ input[type="checkbox"] {
   }
 
   .question-label {
-    margin-left: 15px;
+    margin-left: 25px;
   }
 
   .answer-label {
-    margin-left: 40px;
+    margin-left: 55px;
   }
 
   /* #question-list {
