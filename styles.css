@@ -28,9 +28,10 @@ select {
   margin-right: 10px;
 }
 
-.index.html button {
+.index-html button {
   background-color: rgb(47, 50, 60);
   color: white;
+  border-radius: 20px;
 }
 
 #deleteForm {
