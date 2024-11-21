@@ -59,7 +59,7 @@ select {
 
 .post {
   display: flex;
-  justify-content: space-between; /* ボタンを横並びに */
+  /* justify-content: space-between; ボタンを横並びに */
   align-items: center; /* 垂直方向に中央揃え */
 }
 
