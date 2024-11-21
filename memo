@@ -3,7 +3,7 @@ node server.js
 "ポート3000の起動"
 
 git add .
-git commit -m "Fixed manifest.json and updated icons"
+git commit -m "Fixed"
 
 git push origin main
 git push heroku main
