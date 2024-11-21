@@ -18,7 +18,7 @@ body {
 
 #quiz-text,#answer-text {
   height: 100%;
-  width: 100px;
+  width: 300px;
 }
 
 #start {
@@ -39,7 +39,6 @@ select {
   height: 25px;
   font-size: 15px;
   border-radius: 15px;
-  margin-right: 5px;
 }
 
 .index-page button {
@@ -48,6 +47,7 @@ select {
   border-radius: 15px;
   padding-left: 15px;
   padding-right: 15px;
+  margin-left: 5px;
 }
 
 #deleteForm {
