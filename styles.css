@@ -73,8 +73,7 @@ select {
 
 input[type="checkbox"] {
   transform: scale(1.5); /* サイズを調整 */
-  margin-left: 3px;
-  margin-top: 0.5px;
+  transform-origin: left center;  /* 左端を基準 */
 }
 
 .question-label,
@@ -189,8 +188,6 @@ input[type="checkbox"] {
 
   input[type="checkbox"] {
     transform: scale(2); /* サイズを調整 */
-    margin-left: 3px;
-    margin-top: 0.5px;
   }
 
   .answer-label {
