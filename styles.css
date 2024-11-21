@@ -12,11 +12,13 @@ body {
 }
 
 #add-form {
+  display: flex;
   height: 60px;
 }
 
 #quiz-text,#answer-text {
   height: 100%;
+  flex: 1; /* 親要素内での高さと幅を最大化 */
 }
 
 #start {
