@@ -2,6 +2,7 @@
 
 body {
   background-color: #f5f5f5; /* ベースの背景色 */
+  font-family: "Yu Gothic", "Hiragino Kaku Gothic Pro", Meiryo, sans-serif;
   background-image: radial-gradient(circle, #afdfb3 10%, transparent 10%),
                     radial-gradient(circle, #afdfb3 10%, transparent 10%);
   background-size: 50px 50px; /* 水玉のサイズ */
@@ -26,6 +27,10 @@ select {
   width: 100px;
   height: 25px;
   font-size: 15px;
+}
+
+.question-label,.answer-label {
+ background-color: white;
 }
 
 .answer-label {
