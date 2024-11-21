@@ -1,17 +1,25 @@
 @charset "utf-8";
 
 body {
+  background-color: #f5f5f5; /* ベースの背景色 */
+  background-image: radial-gradient(circle, #daffdd 10%, transparent 10%),
+                    radial-gradient(circle, #daffdd 10%, transparent 10%);
+  background-size: 50px 50px; /* 水玉のサイズ */
+  background-position: 0 0, 25px 25px; /* ドットの配置を交互に */
+}
+
+body {
   margin-top: 10px;
   margin-left: 10px;
 }
 
-a, a:link, a:visited {
+/* a, a:link, a:visited {
   color: black; /* リンクの色を強制的に黒に設定 */
-}
+/* } */ 
 
-meta[name="format-detection"] {
+/* meta[name="format-detection"] {
   -webkit-user-modify: read-only;
-}
+} */
 
 #start {
   margin-top: 10px;
@@ -59,41 +67,10 @@ select {
 
 .post {
   display: flex;
-  /* justify-content: space-between; ボタンを横並びに */
   align-items: center; /* 垂直方向に中央揃え */
 }
 
-#letgo {
-  height: 50px;
-  width: 120px;
-}
-
-#list {
-  height: 50px;
-  width: 120px;
-}
-
-#remake {
-  height: 50px;
-  width: 120px;
-}
-
-#easy {
-  height: 50px;
-  width: 120px;
-}
-
-#normal {
-  height: 50px;
-  width: 120px;
-}
-
-#hard {
-  height: 50px;
-  width: 120px;
-}
-
-#unknown {
+#letgo,#list,#remake,#easy,#normal,#hard,#unknown {
   height: 50px;
   width: 120px;
 }
@@ -132,6 +109,7 @@ select {
     height: 60px;
     font-size: 40px;
     color: black;
+    border: 3px solid #4f4f4ff1;
   }
 
   #delete {
@@ -139,6 +117,7 @@ select {
     height: 80px;
     font-size: 40px;
     color: black;
+    border: 3px solid #4f4f4ff1;
   }
 
   #start {
@@ -160,7 +139,7 @@ select {
     width: 370px;
     height: 100%;
     font-size: 40px;
-    border: 2px solid #4f4f4ff1;
+    border: 3px solid #4f4f4ff1;
   }
 
   form {
