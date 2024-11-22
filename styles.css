@@ -141,7 +141,7 @@ input[type="checkbox"] {
   #add-form {
     display: flex; /* 横並び */
     align-items: flex-start; /* 上揃え */
-    height: 410px;
+    height: 310px;
   }
   
   #text-container {
@@ -163,8 +163,9 @@ input[type="checkbox"] {
   
   #save {
     font-size: 40px;
-    height: 300px;
+    height: 320px;
     align-self: flex-start; /* 上揃え */
+    width: 200px;
   }  
 
   #delete {
@@ -195,6 +196,10 @@ input[type="checkbox"] {
     font-size: 35px;
   }
 
+  #LevelSelect {
+    margin-bottom: 15px;
+  }  
+
   /* 取得後 */
   #deleteForm {
     /* display: block; */
@@ -207,7 +212,7 @@ input[type="checkbox"] {
   }
 
   .answer-container {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
   }
 
   input[type="checkbox"] {
