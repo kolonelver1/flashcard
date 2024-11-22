@@ -134,8 +134,6 @@ input[type="checkbox"] {
   /* メインページ初期 */
 
   #add-form {
-    height: 200px;
-    width: 100%;
     display: flex;
     align-items: flex-start; /* 縦方向に上揃え */
   }
@@ -152,7 +150,7 @@ input[type="checkbox"] {
 
   #save {
     align-self: flex-start; /* #saveボタンを上揃えにする */
-    /* height: 400px; */
+    height: 400px;
     font-size: 40px;
   }
 
