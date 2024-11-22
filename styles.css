@@ -27,6 +27,11 @@ body {
   border: 3px solid #4f4f4ff1;
 }
 
+#save {
+  height: 100%;
+  align-self: flex-start; /* 上揃え */
+}  
+
 #start {
   margin-top: 20px;
   margin-bottom: 10px;
