@@ -134,25 +134,33 @@ input[type="checkbox"] {
   /* メインページ初期 */
 
   #add-form {
+    display: flex; /* 横並び */
+    align-items: flex-start; /* 上揃え */
     height: 410px;
-    align-items: flex-start; /* 縦方向に上揃え */
   }
-
+  
+  #text-container {
+    display: flex;
+    flex-direction: column; /* 縦に並べる */
+    width: 80%; /* 幅を指定 */
+    margin-right: 15px; /* 右側の余白 */
+  }
+  
   #quiz-text,
   #answer-text {
-    width: 80%;
+    width: 100%; /* 幅を親要素に合わせる */
     height: 200px;
     border: 4px solid #4f4f4ff1;
-    margin-right: 15px;
+    margin-bottom: 15px; /* テキストエリア間の隙間 */
     font-size: 40px;
     padding: 0;
   }
-
+  
   #save {
-    align-self: flex-start; /* #saveボタンを上揃えにする */
-    height: 400px;
     font-size: 40px;
-  }
+    height: 60px;
+    align-self: flex-start; /* 上揃え */
+  }  
 
   #delete {
     width: 230px;
