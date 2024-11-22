@@ -292,6 +292,31 @@ app.post('/delete', async (req, res) => { //指定パスからデータ取得
   }
 });
 
+// フラッシュカードの取得（指定された問題IDに基づく）
+app.post('/api/flashcards/checked', async (req, res) => {
+  const { items } = req.body;  // クライアントから送られるIDのリスト
+
+  if (!items || items.length === 0) {
+    return res.status(400).json({ error: 'No items selected.' });
+  }
+
+  try {
+    // 送られてきたIDリストに基づいて、フラッシュカードを検索
+    const flashcards = await Flashcard.find({ '_id': { $in: items } });
+
+    if (flashcards.length === 0) {
+      return res.status(404).json({ error: 'No flashcards found for the given IDs.' });
+    }
+
+    // 見つかったフラッシュカードを返す
+    res.status(200).json(flashcards);  // 必要に応じて問題と解答の情報を返す
+  } catch (error) {
+    console.error('Error fetching flashcards:', error);
+    res.status(500).json({ error: 'Database error: ' + error.message });
+  }
+});
+
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
