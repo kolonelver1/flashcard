@@ -134,7 +134,7 @@ input[type="checkbox"] {
   /* メインページ初期 */
 
   #add-form {
-    display: flex;
+    height: 410px;
     align-items: flex-start; /* 縦方向に上揃え */
   }
 
