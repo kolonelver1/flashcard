@@ -320,4 +320,61 @@ document.addEventListener('DOMContentLoaded', async () => {
       })
       .catch(error => console.error("削除エラー:", error));
   }
+
+  window.checkedQuestions = function () {
+    const form = document.getElementById("deleteForm");
+    const formData = new FormData(form);
+
+    // 選択されたチェックボックスの値を取得
+    const checkedItems = [];
+    formData.forEach((value, key) => {
+      if (key === "item") {
+        checkedItems.push(value);
+      }
+    });
+
+    console.log("取得対象のアイテム:", checkedItems);
+
+    if (checkedItems.length === 0) {
+      console.warn("取得するアイテムが選択されていません");
+      return;
+    }
+
+    // textarea 要素を取得
+    const quizTextArea = document.getElementById("quiz-text");
+    const answerTextArea = document.getElementById("answer-text");
+
+    // APIリクエスト
+    fetch('https://my-flashcard-52952319bda7.herokuapp.com/api/flashcards', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ items: checkedItems }),
+    })
+      .then(response => {
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.json();
+      })
+      .then(data => {
+        // APIから取得したデータを使って問題と回答を転記
+        let selectedQuestions = [];
+        let selectedAnswers = [];
+
+        data.forEach(item => {
+          selectedQuestions.push(item.question);
+          selectedAnswers.push(item.answer);
+        });
+
+        quizTextArea.value = selectedQuestions.join("\n");
+        answerTextArea.value = selectedAnswers.join("\n");
+
+        console.log("表示された問題:", selectedQuestions);
+        console.log("表示された回答:", selectedAnswers);
+      })
+      .catch(error => {
+        console.error("エラーが発生しました:", error);
+      });
+  };
+
 })
