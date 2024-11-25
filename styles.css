@@ -142,6 +142,7 @@ input[type="checkbox"] {
     display: flex; /* 横並び */
     align-items: flex-start; /* 上揃え */
     height: 310px;
+    margin-bottom: 30px;
   }
   
   #text-container {
@@ -197,7 +198,7 @@ input[type="checkbox"] {
   }
 
   #LevelSelect {
-    margin-bottom: 15px;
+    margin-bottom: 25px;
   }  
 
   /* 取得後 */
@@ -212,7 +213,7 @@ input[type="checkbox"] {
   }
 
   .answer-container {
-    margin-bottom: 25px;
+    margin-bottom: 40px;
   }
 
   input[type="checkbox"] {

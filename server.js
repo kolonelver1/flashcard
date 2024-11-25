@@ -188,24 +188,24 @@ const updateNextStudyDate = (level) => {
   switch (level) {
     case 0: return null;
     case 1: daysToAdd = 1; break;
-    case 2: daysToAdd = 2; break;
-    case 3: daysToAdd = 3; break;
-    case 4: daysToAdd = 5; break;
-    case 5: daysToAdd = 8; break;
-    case 6: daysToAdd = 13; break;
-    case 7: daysToAdd = 24; break;
-    case 8: daysToAdd = 37; break;
-    case 9: daysToAdd = 61; break;
-    case 10: daysToAdd = 98; break;
-    case 11: daysToAdd = 130; break;
-    case 12: daysToAdd = 150; break;
-    case 13: daysToAdd = 180; break;
-    case 14: daysToAdd = 200; break;
-    case 15: daysToAdd = 220; break;
-    case 16: daysToAdd = 250; break;
-    case 17: daysToAdd = 280; break;
-    case 18: daysToAdd = 300; break;
-    case 19: daysToAdd = 330; break;
+    case 2: daysToAdd = 3; break;
+    case 3: daysToAdd = 5; break;
+    case 4: daysToAdd = 8; break;
+    case 5: daysToAdd = 13; break;
+    case 6: daysToAdd = 20; break;
+    case 7: daysToAdd = 40; break;
+    case 8: daysToAdd = 60; break;
+    case 9: daysToAdd = 100; break;
+    case 10: daysToAdd = 120; break;
+    case 11: daysToAdd = 150; break;
+    case 12: daysToAdd = 200; break;
+    case 13: daysToAdd = 220; break;
+    case 14: daysToAdd = 250; break;
+    case 15: daysToAdd = 280; break;
+    case 16: daysToAdd = 300; break;
+    case 17: daysToAdd = 330; break;
+    case 18: daysToAdd = 330; break;
+    case 19: daysToAdd = 350; break;
     case 20: daysToAdd = 350; break;
     default: daysToAdd = 0; // デフォルトは0日
   }
