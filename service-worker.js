@@ -8,6 +8,8 @@ const urlsToCache = [
   '/flashcard/quiz.html',
   '/flashcard/answer.html',
   '/flashcard/add.js',
+  '/flashcard/api.js',
+  '/flashcard/indexedDB.js',
   '/flashcard/quiz.js',
   '/flashcard/answer.js',
   '/flashcard/server.js',
