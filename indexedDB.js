@@ -8,7 +8,7 @@ let db;
 // IndexedDBを開く
 const openDatabase = () => {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME, DB_VERSION);
+    const request = indexedDB.open("FlashcardDB", 1);
 
     request.onupgradeneeded = (event) => {
       db = event.target.result;

@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       // IndexedDBからフラッシュカードを取得
       await openDatabase();
       flashcards = await getAllFlashcards(); // IndexedDBから取得したデータをフロントエンドで使用
-      console.log("Retrieved flashcards:", flashcards); // コンソールに表示
+      console.log("All flashcards:", flashcards); // コンソールに表示
     } catch (error) {
       console.error("Error fetching flashcards from IndexedDB:", error);
     }
