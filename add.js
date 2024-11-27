@@ -1,18 +1,17 @@
 'use strict'; // エラーがあれば表示、必ず先頭
 
 import { openDatabase, getAllFlashcards } from './indexedDB.js'; // IndexedDB.js をインポート
-console.log(getAllFlashcards);
 let flashcards = []; // グローバルに宣言
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
     await openDatabase();
-    flashcards = await getAllFlashcards();
-    console.log(flashcards); // コンソールで取得したデータを確認
+    const flashcards = await getAllFlashcards();
+    console.log("All flashcards:", flashcards);
   } catch (error) {
-    console.error('IndexedDBのデータ取得エラー:', error);
+    console.error("Error fetching data from IndexedDB:", error);
   }
-
+  
   // HTMLが読み込まれてから実行
   // document.addEventListener('DOMContentLoaded', async () => {
   //   try {
