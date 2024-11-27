@@ -61,6 +61,7 @@ const fetchAndSaveData = async () => {
       if (!flashcard._id) {
         throw new Error('Missing _id for flashcard');
       }
+      flashcard.id = flashcard._id || flashcard.id;
 
       await saveFlashcard(flashcard); // 取得したフラッシュカードを保存
     }

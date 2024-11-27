@@ -33,6 +33,11 @@ const openDatabase = () => {
 // データを保存する
 const saveFlashcard = (flashcard) => {
   return new Promise((resolve, reject) => {
+    if (!flashcard._id) {
+      console.error("Missing _id in flashcard:", flashcard);
+      return reject(new Error("Missing _id"));
+    }
+    
     const transaction = db.transaction("flashcards", "readwrite");
     const store = transaction.objectStore("flashcards");
     const request = store.put(flashcard);
