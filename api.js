@@ -59,7 +59,6 @@ const fetchAndSaveData = async () => {
     // 各データをIndexedDBに保存
     for (const flashcard of flashcards) {
       await saveFlashcard(flashcard);
-      console.log(`Saved flashcard with ID ${flashcard.id}`);
     }
 
     console.log("All data saved to IndexedDB!");

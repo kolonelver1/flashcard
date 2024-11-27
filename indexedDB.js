@@ -31,23 +31,11 @@ export const openDatabase = () => {
   });
 };
 
-// データを保存する関数
-export const saveFlashcard = (flashcard) => {
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction("flashcards", "readwrite");
-    const store = transaction.objectStore("flashcards");
-    const request = store.put(flashcard);
-
-    request.onsuccess = () => resolve(true);
-    request.onerror = (event) => reject(event.target.error);
-  });
-};
-
 // すべてのデータを取得する関数
 export const getAllFlashcards = () => {
   return new Promise((resolve, reject) => {
-    const transaction = db.transaction("flashcards", "readonly");
-    const store = transaction.objectStore("flashcards");
+    const transaction = db.transaction("flashcard", "readonly");
+    const store = transaction.objectStore("flashcard");
     const request = store.getAll();
 
     request.onsuccess = (event) => {
