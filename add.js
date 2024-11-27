@@ -274,7 +274,7 @@ if (addButton) {
       level: Level,
       nextStudyDate: today,
     };
-
+    
     try {
       // サーバーに新しいデータを追加
       const response = await fetch('https://my-flashcard-52952319bda7.herokuapp.com/api/flashcards', {
@@ -282,26 +282,36 @@ if (addButton) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newFlashcard),
       });
-
+    
       if (!response.ok) throw new Error('Network response was not ok');
-
-      const savedData = await response.json(); // サーバーからの保存結果を取得
-
+    
+      // サーバーから返ってきたデータを取得
+      const savedData = await response.json();
       console.log('Success:', savedData);
-
-      // サーバーに保存されたデータを IndexedDB に追加
-      await saveFlashcard(savedData);
-
-      // フラッシュカードを再取得してセレクトボックスを更新
-      await fetchFlashcards();
-
-      // テキストボックスをクリア
-      text.value = '';
-      answerText.value = '';
-
+    
+      // IndexedDB用にidを補完（サーバーから返ってきたデータにidがなければ生成）
+      const newFlashcardForIndexedDB = {
+        ...savedData,
+        id: savedData.id || Date.now(), // サーバーがIDを返さなければローカルで生成
+      };
+    
+      // サーバーから取得したデータをIndexedDBに保存
+      await saveFlashcard(newFlashcardForIndexedDB);
+    
+      // データ保存成功時のフィードバックやUI更新
+      console.log('Flashcard successfully added to IndexedDB:', newFlashcardForIndexedDB);
+      
+      // セレクトボックスを更新
+      populateStudyDates('studyDatesSelect');
+      populateStudyDates('getQuizDate');
+      populateStudyLevel('getQuizLevel');
     } catch (error) {
-      console.error('Error:', error);
-    }
+      console.error('Error adding flashcard:', error);
+    }    
+
+    // テキストボックスをクリア
+    text.value = '';
+    answerText.value = ''; // 答えもクリア
   });
 } else {
   console.error("Element with ID 'save' not found");
