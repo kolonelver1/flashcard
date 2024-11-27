@@ -329,8 +329,8 @@ if (addButton) {
     text.value = '';
     answerText.value = '';
 
-    fetchFlashcards()
-    
+    location.reload()
+
   });
 } else {
   console.error("Element with ID 'save' not found");
