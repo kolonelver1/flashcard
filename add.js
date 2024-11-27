@@ -197,51 +197,142 @@ function formatDate(dateString) {
 }
 
 // 日付用セレクトボックス
-async function populateStudyDates(selectBoxId) {
-  const uniqueDates = new Set(); // ユニークな日付を格納するためのSetを作成
+// IndexedDBからフラッシュカードデータを取得する関数
+async function getAllFlashcards() {
+  return new Promise((resolve, reject) => {
+    const dbRequest = indexedDB.open('flashcardDB', 1);
 
-  flashcards.forEach(card => {
-    if (card.nextStudyDate) {
-      const formattedDate = formatDate(card.nextStudyDate);
-      if (formattedDate) { // フォーマットが成功した場合のみ追加
-        uniqueDates.add(formattedDate); // Setに日付を追加（重複は自動的に排除される）
+    dbRequest.onerror = (event) => {
+      console.error('IndexedDB オープンエラー:', event.target.error);
+      reject(event.target.error);
+    };
+
+    dbRequest.onsuccess = (event) => {
+      const db = event.target.result;
+      const transaction = db.transaction('flashcards', 'readonly');
+      const store = transaction.objectStore('flashcards');
+      const getRequest = store.getAll(); // 全データを取得
+
+      getRequest.onsuccess = () => {
+        resolve(getRequest.result);
+      };
+
+      getRequest.onerror = (event) => {
+        reject(event.target.error);
+      };
+    };
+
+    dbRequest.onupgradeneeded = (event) => {
+      const db = event.target.result;
+      if (!db.objectStoreNames.contains('flashcards')) {
+        db.createObjectStore('flashcards', { keyPath: '_id' });
       }
-    }
-  });
-
-  // ユニークな日付をArrayに変換し、昇順にソート
-  const sortedUniqueDates = Array.from(uniqueDates).sort((a, b) => a.localeCompare(b));
-
-  // 指定されたセレクトボックスの要素を取得
-  const selectBox = document.getElementById(selectBoxId);
-  selectBox.innerHTML = ''; // セレクトボックスをクリア
-
-  // ユニークな日付をセレクトボックスに追加
-  sortedUniqueDates.forEach(date => {
-    const option = document.createElement('option');
-    option.value = date;
-    option.textContent = date;
-    selectBox.appendChild(option); // セレクトボックスにオプションを追加
+    };
   });
 }
 
+// 指定されたセレクトボックスをユニークな日付で更新する関数
+async function populateStudyDates(selectBoxId) {
+  try {
+    // IndexedDBから全フラッシュカードデータを取得
+    const flashcards = await getAllFlashcards();
+
+    const uniqueDates = new Set(); // ユニークな日付を格納するためのSetを作成
+
+    flashcards.forEach(card => {
+      if (card.nextStudyDate) {
+        const formattedDate = formatDate(card.nextStudyDate);
+        if (formattedDate) { // フォーマットが成功した場合のみ追加
+          uniqueDates.add(formattedDate); // Setに日付を追加（重複は自動的に排除される）
+        }
+      }
+    });
+
+    // ユニークな日付をArrayに変換し、昇順にソート
+    const sortedUniqueDates = Array.from(uniqueDates).sort((a, b) => a.localeCompare(b));
+
+    // 指定されたセレクトボックスの要素を取得
+    const selectBox = document.getElementById(selectBoxId);
+    selectBox.innerHTML = ''; // セレクトボックスをクリア
+
+    // ユニークな日付をセレクトボックスに追加
+    sortedUniqueDates.forEach(date => {
+      const option = document.createElement('option');
+      option.value = date;
+      option.textContent = date;
+      selectBox.appendChild(option); // セレクトボックスにオプションを追加
+    });
+
+    // 変更を反映
+    selectBox.dispatchEvent(new Event('change')); // セレクトボックスの変更を通知
+
+  } catch (error) {
+    console.error('Error populating study dates:', error);
+  }
+}
+
 //Level用セレクトボックス
-async function populateStudyLevel(selectBoxId) {
+// IndexedDBからフラッシュカードデータを取得する関数
+async function getAllFlashcards() {
+  return new Promise((resolve, reject) => {
+    const dbRequest = indexedDB.open('flashcardDB', 1);
 
-  // 全てのカードのLevelを配列に格納し、重複を排除して昇順にソート
-  const levels = [...new Set(flashcards.map(card => card.level))].sort((a, b) => a - b);
+    dbRequest.onerror = (event) => {
+      console.error('IndexedDB オープンエラー:', event.target.error);
+      reject(event.target.error);
+    };
 
-  // 指定されたセレクトボックスの要素を取得
-  const selectBox = document.getElementById(selectBoxId);
-  selectBox.innerHTML = ''; // セレクトボックスをクリア
+    dbRequest.onsuccess = (event) => {
+      const db = event.target.result;
+      const transaction = db.transaction('flashcards', 'readonly');
+      const store = transaction.objectStore('flashcards');
+      const getRequest = store.getAll(); // 全データを取得
 
-  // Levelをセレクトボックスに追加
-  levels.forEach(level => {
-    const option = document.createElement('option');
-    option.value = level;
-    option.textContent = `Level ${level}`;
-    selectBox.appendChild(option); // セレクトボックスにオプションを追加
+      getRequest.onsuccess = () => {
+        resolve(getRequest.result);
+      };
+
+      getRequest.onerror = (event) => {
+        reject(event.target.error);
+      };
+    };
+
+    dbRequest.onupgradeneeded = (event) => {
+      const db = event.target.result;
+      if (!db.objectStoreNames.contains('flashcards')) {
+        db.createObjectStore('flashcards', { keyPath: '_id' });
+      }
+    };
   });
+}
+
+// 指定されたセレクトボックスをユニークなレベルで更新する関数
+async function populateStudyLevel(selectBoxId) {
+  try {
+    // IndexedDBから全フラッシュカードデータを取得
+    const flashcards = await getAllFlashcards();
+
+    // 全てのカードのLevelを配列に格納し、重複を排除して昇順にソート
+    const levels = [...new Set(flashcards.map(card => card.level))].sort((a, b) => a - b);
+
+    // 指定されたセレクトボックスの要素を取得
+    const selectBox = document.getElementById(selectBoxId);
+    selectBox.innerHTML = ''; // セレクトボックスをクリア
+
+    // Levelをセレクトボックスに追加
+    levels.forEach(level => {
+      const option = document.createElement('option');
+      option.value = level;
+      option.textContent = `Level ${level}`;
+      selectBox.appendChild(option); // セレクトボックスにオプションを追加
+    });
+
+    // 変更を反映
+    selectBox.dispatchEvent(new Event('change')); // セレクトボックスの変更を通知
+
+  } catch (error) {
+    console.error('Error populating study levels:', error);
+  }
 }
 
 // 『問題を解く』ボタンの処理
