@@ -1,6 +1,5 @@
 'use strict'; // エラーがあれば表示、必ず先頭
 
-// フラッシュカードを取得してグローバルで使用するための関数
 let flashcards = []; // フロントエンドで使用するためのグローバル変数
 
 document.addEventListener('DOMContentLoaded', async () => {

@@ -1,5 +1,3 @@
-// indexedDB.js
-
 // IndexedDBの操作関数
 const DB_NAME = "FlashcardDB";
 const DB_VERSION = 1;
@@ -8,12 +6,12 @@ let db;
 // IndexedDBを開く
 const openDatabase = () => {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open("FlashcardDB", 1);
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
 
     request.onupgradeneeded = (event) => {
       db = event.target.result;
       if (!db.objectStoreNames.contains("flashcards")) {
-        const store = db.createObjectStore("flashcards", { keyPath: "_id" });
+        const store = db.createObjectStore("flashcards", { keyPath: "_id" }); // _idをkeyPathとして設定
         store.createIndex("question", "question", { unique: false });
         store.createIndex("answer", "answer", { unique: false });
         store.createIndex("nextStudeday", "nextStudeday", { unique: false });
@@ -59,6 +57,7 @@ const getAllFlashcards = () => {
   });
 };
 
+// APIからデータを取得してIndexedDBに保存する関数
 const fetchAndSaveData = async () => {
   const apiUrl = "https://my-flashcard-52952319bda7.herokuapp.com/api/flashcards";
 
@@ -84,7 +83,7 @@ const fetchAndSaveData = async () => {
   }
 };
 
-// 3. IndexedDBからデータを取得してフロントエンドで使用するための関数
+// IndexedDBからデータを取得してフロントエンドで使用するための関数
 let flashcards = [];
 
 const fetchFlashcards = async () => {
@@ -97,7 +96,7 @@ const fetchFlashcards = async () => {
   }
 };
 
-// 4. 初期化処理を行う関数
+// 初期化処理を行う関数
 const initializeData = async () => {
   // 1. APIからデータを取得してIndexedDBに保存
   await fetchAndSaveData();

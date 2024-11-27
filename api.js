@@ -10,7 +10,7 @@ const openDatabase = () => {
     request.onupgradeneeded = (event) => {
       db = event.target.result;
       if (!db.objectStoreNames.contains("flashcards")) {
-        const store = db.createObjectStore("flashcards", { keyPath: "id" });
+        const store = db.createObjectStore("flashcards", { keyPath: "_id" }); // _idをkeyPathとして設定
         store.createIndex("question", "question", { unique: false });
         store.createIndex("answer", "answer", { unique: false });
         store.createIndex("nextStudeday", "nextStudeday", { unique: false });
@@ -34,7 +34,7 @@ const saveFlashcard = (flashcard) => {
   return new Promise((resolve, reject) => {
     const transaction = db.transaction("flashcards", "readwrite");
     const store = transaction.objectStore("flashcards");
-    const request = store.put(flashcard);
+    const request = store.put(flashcard);  // put()でデータを保存
 
     request.onsuccess = () => resolve(true);
     request.onerror = (event) => reject(event.target.error);
@@ -57,6 +57,11 @@ const fetchAndSaveData = async () => {
     await openDatabase();
 
     for (const flashcard of flashcards) {
+      // _idをkeyとして保存するために確認
+      if (!flashcard._id) {
+        throw new Error('Missing _id for flashcard');
+      }
+
       await saveFlashcard(flashcard); // 取得したフラッシュカードを保存
     }
 
@@ -68,4 +73,3 @@ const fetchAndSaveData = async () => {
 
 // 実行
 fetchAndSaveData();
-
