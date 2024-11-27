@@ -307,18 +307,6 @@ if (addButton) {
   console.error("Element with ID 'save' not found");
 }
 
-// フラッシュカードリストの再描画（例）
-function updateFlashcardList(flashcards) {
-  const flashcardList = document.getElementById('flashcardList'); // 例: HTMLリスト要素
-  flashcardList.innerHTML = ''; // 現在のリストをクリア
-
-  flashcards.forEach(card => {
-    const listItem = document.createElement('li');
-    listItem.textContent = `${card.question} - ${card.answer}`;
-    flashcardList.appendChild(listItem);
-  });
-}
-
 // 問題削除の処理
 window.deleteSelected = function () {
   const form = document.getElementById("deleteForm");
