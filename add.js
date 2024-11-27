@@ -236,7 +236,7 @@ async function populateStudyDates(selectBoxId) {
   }
 }
 
-//Level用セレクトボックス
+// Level用セレクトボックス
 async function populateStudyLevel(selectBoxId) {
   try {
     // IndexedDBから全フラッシュカードデータを取得
@@ -321,9 +321,6 @@ if (addButton) {
     
       // データ保存成功時のフィードバックやUI更新
       console.log('Flashcard successfully added to IndexedDB:', newFlashcardForIndexedDB);
-      populateStudyDates('studyDatesSelect'); // セレクトボックスを更新
-      populateStudyDates('getQuizDate'); 
-      populateStudyLevel('getQuizLevel');
     } catch (error) {
       console.error('Error adding flashcard:', error);
     }
