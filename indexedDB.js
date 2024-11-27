@@ -113,8 +113,6 @@ const initializeData = async () => {
   // 2. IndexedDBからデータを取得してフロントエンドで利用
   await fetchFlashcards();
 
-  // flashcardsにはIndexedDBのデータが入っている
-  console.log(flashcards); // ここでグローバル変数flashcardsを使う
 };
 
 // 初期化

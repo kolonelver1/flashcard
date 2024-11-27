@@ -10,10 +10,18 @@ document.addEventListener('DOMContentLoaded', async () => {
       await openDatabase();
       flashcards = await getAllFlashcards(); // IndexedDBから取得したデータをフロントエンドで使用
       console.log("All flashcards:", flashcards); // コンソールに表示
+
+      // ここでセレクトボックスの更新を行う
+      populateStudyDates('studyDatesSelect');
+      populateStudyDates('getQuizDate');
+      populateStudyLevel('getQuizLevel');
     } catch (error) {
       console.error("Error fetching flashcards from IndexedDB:", error);
     }
   }
+
+  await fetchFlashcards();
+
 
   // HTMLが読み込まれてから実行
   // document.addEventListener('DOMContentLoaded', async () => {
@@ -222,11 +230,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       selectBox.appendChild(option); // セレクトボックスにオプションを追加
     });
   }
-
-  // 各セレクトボックスのIDを指定して関数を呼び出し
-  populateStudyDates('studyDatesSelect');
-  populateStudyDates('getQuizDate');
-  populateStudyLevel('getQuizLevel');
 
   // 『問題を解く』ボタンの処理
   document.getElementById('quiz').onclick = function () {
