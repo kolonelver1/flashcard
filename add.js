@@ -353,7 +353,7 @@ window.deleteSelected = function () {
         console.error("IndexedDB削除エラー:", error);
       }
 
-      location.reload(); // ページをリロード
+      // location.reload(); // ページをリロード
     })
     .catch(error => console.error("削除エラー:", error));
 };
