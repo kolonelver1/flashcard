@@ -1,6 +1,6 @@
 'use strict'; // エラーがあれば表示、必ず先頭
 
-import { openDatabase, getAllFlashcards } from './indexedDB'; // IndexedDB.js をインポート
+import { openDatabase, getAllFlashcards } from './indexedDB.js'; // IndexedDB.js をインポート
 
 let flashcards = []; // グローバルに宣言
 
