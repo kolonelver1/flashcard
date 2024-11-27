@@ -289,10 +289,10 @@ if (addButton) {
       const savedData = await response.json();
       console.log('Success:', savedData);
     
-      // IndexedDB用にidを補完（サーバーから返ってきたデータにidがなければ生成）
+      // サーバーから取得したデータに_idがない場合、Date.now()で生成
       const newFlashcardForIndexedDB = {
         ...savedData,
-        id: savedData.id || Date.now(), // サーバーがIDを返さなければローカルで生成
+        _id: savedData._id || Date.now(), // _idをサーバーから取得できない場合、ローカルで生成
       };
     
       // サーバーから取得したデータをIndexedDBに保存
@@ -300,18 +300,16 @@ if (addButton) {
     
       // データ保存成功時のフィードバックやUI更新
       console.log('Flashcard successfully added to IndexedDB:', newFlashcardForIndexedDB);
-      
-      // セレクトボックスを更新
-      populateStudyDates('studyDatesSelect');
-      populateStudyDates('getQuizDate');
+      populateStudyDates('studyDatesSelect'); // セレクトボックスを更新
+      populateStudyDates('getQuizDate'); 
       populateStudyLevel('getQuizLevel');
     } catch (error) {
       console.error('Error adding flashcard:', error);
-    }    
+    }
 
     // テキストボックスをクリア
     text.value = '';
-    answerText.value = ''; // 答えもクリア
+    answerText.value = '';
   });
 } else {
   console.error("Element with ID 'save' not found");

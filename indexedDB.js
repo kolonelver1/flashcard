@@ -65,6 +65,11 @@ export async function saveFlashcard(flashcard) {
       const transaction = db.transaction('flashcards', 'readwrite');
       const store = transaction.objectStore('flashcards');
 
+      // _idがない場合、Date.now()で一意なIDを生成
+      if (!flashcard._id) {
+        flashcard._id = Date.now();
+      }
+
       const addRequest = store.add(flashcard); // データを追加
 
       addRequest.onsuccess = () => {
@@ -81,7 +86,7 @@ export async function saveFlashcard(flashcard) {
     dbRequest.onupgradeneeded = (event) => {
       const db = event.target.result;
       if (!db.objectStoreNames.contains('flashcards')) {
-        db.createObjectStore('flashcards', { keyPath: '_id' }); // サーバーからのIDをキーとして使用
+        db.createObjectStore('flashcards', { keyPath: '_id' }); // _idをキーとして使用
       }
     };
   });
