@@ -46,3 +46,6 @@ const getAllFlashcards = () => {
     };
   });
 };
+
+// openDatabase と getAllFlashcards をエクスポート
+export { openDatabase, getAllFlashcards };
