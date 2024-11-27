@@ -42,6 +42,7 @@ const getAllFlashcards = () => {
     };
 
     request.onsuccess = function () {
+      console.log('Fetched flashcards:', request.result);  // データを確認
       resolve(request.result);
     };
   });
