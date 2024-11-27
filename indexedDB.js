@@ -112,4 +112,4 @@ const deleteFlashcardsFromIndexedDB = async (itemsToDelete) => {
 };
 
 // openDatabase と getAllFlashcards をエクスポート
-export { openDatabase, getAllFlashcards, deleteFlashcardsFromIndexedDB, saveFlashcard};
+export { openDatabase, getAllFlashcards, deleteFlashcardsFromIndexedDB };
