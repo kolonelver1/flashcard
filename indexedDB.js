@@ -33,9 +33,8 @@ const openDatabase = () => {
 // データを保存する
 const saveFlashcard = (flashcard) => {
   return new Promise((resolve, reject) => {
-    // flashcard.idが設定されていない場合、_idをidとして設定
     if (!flashcard.id && flashcard._id) {
-      flashcard.id = flashcard._id; // _idをidとして設定
+      flashcard.id = flashcard._id;
     }
 
     if (!flashcard.id) {
@@ -55,15 +54,26 @@ const saveFlashcard = (flashcard) => {
 // すべてのフラッシュカードを取得する
 const getAllFlashcards = () => {
   return new Promise((resolve, reject) => {
-    const transaction = db.transaction("flashcards", "readonly");
-    const store = transaction.objectStore("flashcards");
-    const request = store.getAll();
+    const request = indexedDB.open('flashcardsDB', 1);
 
-    request.onsuccess = (event) => {
-      resolve(event.target.result);
+    request.onerror = function (event) {
+      reject('Error opening IndexedDB: ' + event.target.error);
     };
 
-    request.onerror = (event) => reject(event.target.error);
+    request.onsuccess = function (event) {
+      const db = event.target.result;
+      const transaction = db.transaction('flashcards', 'readonly');
+      const store = transaction.objectStore('flashcards');
+      const allFlashcardsRequest = store.getAll();
+
+      allFlashcardsRequest.onerror = function () {
+        reject('Error fetching flashcards from IndexedDB');
+      };
+
+      allFlashcardsRequest.onsuccess = function () {
+        resolve(allFlashcardsRequest.result);
+      };
+    };
   });
 };
 
@@ -97,22 +107,23 @@ let flashcards = [];
 
 const fetchFlashcards = async () => {
   try {
-    await openDatabase();
-    flashcards = await getAllFlashcards(); // IndexedDBからデータを取得
-    console.log("Retrieved flashcards:", flashcards);
+    flashcards = await getAllFlashcards(); // データベースから取得
+    console.log("All flashcards:", flashcards); // コンソールに表示
+
+    populateStudyDates('studyDatesSelect');
+    populateStudyDates('getQuizDate');
+    populateStudyLevel('getQuizLevel');
   } catch (error) {
     console.error("Error fetching flashcards from IndexedDB:", error);
   }
 };
 
+await fetchFlashcards();
+
 // 初期化処理を行う関数
 const initializeData = async () => {
-  // 1. APIからデータを取得してIndexedDBに保存
-  await fetchAndSaveData();
-
-  // 2. IndexedDBからデータを取得してフロントエンドで利用
-  await fetchFlashcards();
-
+  await openDatabase();  // 1回だけデータベースを開く
+  await fetchAndSaveData();  // APIからデータを取得して保存
 };
 
 // 初期化
