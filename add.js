@@ -7,10 +7,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   const fetchFlashcards = async () => {
     try {
       // IndexedDBからフラッシュカードを取得
-      await openDatabase();
       flashcards = await getAllFlashcards(); // IndexedDBから取得したデータをフロントエンドで使用
       console.log("All flashcards:", flashcards); // コンソールに表示
-
+  
       // ここでセレクトボックスの更新を行う
       populateStudyDates('studyDatesSelect');
       populateStudyDates('getQuizDate');
@@ -19,8 +18,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       console.error("Error fetching flashcards from IndexedDB:", error);
     }
   }
-
-  await fetchFlashcards();
+  
+  await fetchFlashcards();  
 
 
   // HTMLが読み込まれてから実行
