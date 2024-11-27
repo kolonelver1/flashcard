@@ -1,7 +1,7 @@
 'use strict'; // エラーがあれば表示、必ず先頭
 
 import { openDatabase, getAllFlashcards } from './indexedDB.js'; // IndexedDB.js をインポート
-
+console.log(getAllFlashcards);
 let flashcards = []; // グローバルに宣言
 
 document.addEventListener('DOMContentLoaded', async () => {
