@@ -60,12 +60,12 @@ export const getAllFlashcards = () => {
 };
 
 // IndexedDBのデータを取得してコンソールに表示する関数
-export const logAllFlashcards = async () => {
-  try {
-    await openDatabase();
-    const flashcards = await getAllFlashcards();
-    console.log("All flashcards:", flashcards);
-  } catch (error) {
-    console.error("Error fetching data from IndexedDB:", error);
-  }
-};
+// export const logAllFlashcards = async () => {
+//   try {
+//     await openDatabase();
+//     const flashcards = await getAllFlashcards();
+//     console.log("All flashcards:", flashcards);
+//   } catch (error) {
+//     console.error("Error fetching data from IndexedDB:", error);
+//   }
+// };
