@@ -1,11 +1,12 @@
 // indexedDB.js
 
+// IndexedDBの操作関数
 const DB_NAME = "FlashcardDB";
 const DB_VERSION = 1;
 let db;
 
-// IndexedDBを開く関数
-export const openDatabase = () => {
+// IndexedDBを開く
+const openDatabase = () => {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(DB_NAME, DB_VERSION);
 
@@ -31,29 +32,29 @@ export const openDatabase = () => {
   });
 };
 
-// すべてのデータを取得する関数
-export const getAllFlashcards = () => {
+// データを保存する
+const saveFlashcard = (flashcard) => {
   return new Promise((resolve, reject) => {
-    const transaction = db.transaction("flashcard", "readonly");
-    const store = transaction.objectStore("flashcard");
+    const transaction = db.transaction("flashcards", "readwrite");
+    const store = transaction.objectStore("flashcards");
+    const request = store.put(flashcard);
+
+    request.onsuccess = () => resolve(true);
+    request.onerror = (event) => reject(event.target.error);
+  });
+};
+
+// すべてのフラッシュカードを取得する
+const getAllFlashcards = () => {
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction("flashcards", "readonly");
+    const store = transaction.objectStore("flashcards");
     const request = store.getAll();
 
     request.onsuccess = (event) => {
-      console.log("Retrieved data from IndexedDB:", event.target.result);
       resolve(event.target.result);
     };
 
     request.onerror = (event) => reject(event.target.error);
   });
-};
-
-// IndexedDBのデータを取得してコンソールに表示する関数
-export const logAllFlashcards = async () => {
-  try {
-    await openDatabase();
-    const flashcards = await getAllFlashcards();
-    console.log("All flashcards:", flashcards);
-  } catch (error) {
-    console.error("Error fetching data from IndexedDB:", error);
-  }
 };

@@ -41,7 +41,7 @@ const saveFlashcard = (flashcard) => {
   });
 };
 
-// APIサーバーからデータを取得しIndexedDBに保存する関数
+// APIサーバーからデータを取得してIndexedDBに保存する関数
 const fetchAndSaveData = async () => {
   const apiUrl = "https://my-flashcard-52952319bda7.herokuapp.com/api/flashcards";
 
@@ -53,12 +53,11 @@ const fetchAndSaveData = async () => {
     }
     const flashcards = await response.json();
 
-    // データベースを開く
+    // IndexedDBにデータを保存
     await openDatabase();
 
-    // 各データをIndexedDBに保存
     for (const flashcard of flashcards) {
-      await saveFlashcard(flashcard);
+      await saveFlashcard(flashcard); // 取得したフラッシュカードを保存
     }
 
     console.log("All data saved to IndexedDB!");
