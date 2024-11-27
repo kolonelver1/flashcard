@@ -196,40 +196,6 @@ function formatDate(dateString) {
   return `${year}/${month}/${day}`;
 }
 
-// IndexedDBからフラッシュカードデータを取得する関数
-async function getAllFlashcards() {
-  return new Promise((resolve, reject) => {
-    const dbRequest = indexedDB.open('flashcardDB', 1);
-
-    dbRequest.onerror = (event) => {
-      console.error('IndexedDB オープンエラー:', event.target.error);
-      reject(event.target.error);
-    };
-
-    dbRequest.onsuccess = (event) => {
-      const db = event.target.result;
-      const transaction = db.transaction('flashcards', 'readonly');
-      const store = transaction.objectStore('flashcards');
-      const getRequest = store.getAll(); // 全データを取得
-
-      getRequest.onsuccess = () => {
-        resolve(getRequest.result);
-      };
-
-      getRequest.onerror = (event) => {
-        reject(event.target.error);
-      };
-    };
-
-    dbRequest.onupgradeneeded = (event) => {
-      const db = event.target.result;
-      if (!db.objectStoreNames.contains('flashcards')) {
-        db.createObjectStore('flashcards', { keyPath: '_id' });
-      }
-    };
-  });
-}
-
 // 日付用セレクトボックス
 async function populateStudyDates(selectBoxId) {
   try {
