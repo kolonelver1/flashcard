@@ -1,8 +1,7 @@
-//サービスワーカーの登録
-
+// キャッシュ名をバージョン管理
 const CACHE_NAME = 'flashcard-cache-v1'; // キャッシュ名をバージョン管理
 
-//設定するファイルを選択
+// 設定するファイルを選択
 const urlsToCache = [
   '/flashcard/index.html',
   '/flashcard/quiz.html',
@@ -25,73 +24,49 @@ const urlsToCache = [
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(urlsToCache);
+      return cache.addAll(urlsToCache); // 初回キャッシュ
     })
   );
   console.log('Installed and opened cache:', CACHE_NAME); // デバッグ用
   self.skipWaiting(); // 即座に新しいサービスワーカーを有効化
 });
 
-//フェッチイベント
+// フェッチイベント
 self.addEventListener('fetch', event => {
   console.log('Fetching:', event.request.url, 'Method:', event.request.method);
 
-  if (event.request.method === 'POST') {
-    console.log('Handling POST request:', event.request.url);
-  
+  // POSTリクエストに関しては、必ず新しいデータを取得
+  if (event.request.method === 'POST' || event.request.method === 'PUT') {
+    console.log('Handling POST/PUT request:', event.request.url);
+
     event.respondWith(
       fetch(event.request.clone(), {
-        credentials: 'include'  // 認証情報を含める
+        credentials: 'include',
+        cache: 'no-cache'  // キャッシュを使用せず、常に最新データを取得
       })
         .then(response => {
           const headers = new Headers(response.headers);
           headers.set('Access-Control-Allow-Origin', 'https://kolonelver1.github.io');
           headers.set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE');
           headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  
+
           const clonedResponse = new Response(response.body, {
             status: response.status,
             statusText: response.statusText,
             headers: headers
           });
-  
-          console.log('POST request successful:', event.request.url);
+
           return clonedResponse;
         })
         .catch(error => {
-          console.error('POST request failed:', error);
-          return new Response('POST request failed', { status: 500 });
+          console.error('POST/PUT request failed:', error);
+          return new Response('POST/PUT request failed', { status: 500 });
         })
-    );
-    return;
-  }  
-
-  if (event.request.method === 'PUT') {
-    console.log('Handling PUT request:', event.request.url);
-    // PUT専用の処理
-    event.respondWith(
-      fetch(event.request.clone(), {
-        credentials: 'include'  // 認証情報を含める
-      }).then(response => {
-        const headers = new Headers(response.headers);
-        headers.set('Access-Control-Allow-Origin', 'https://kolonelver1.github.io');
-        headers.set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE');
-        headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-        const clonedResponse = new Response(response.body, {
-          status: response.status,
-          statusText: response.statusText,
-          headers: headers
-        });
-        return clonedResponse;
-      }).catch(error => {
-        console.error('PUT request failed:', error);
-        return new Response('PUT request failed', { status: 500 });
-      })
     );
     return;
   }
 
-  // その他のリクエスト
+  // その他のリクエスト（GETなど）
   event.respondWith(
     fetch(event.request, {
       credentials: 'include'  // 認証情報を含める
@@ -101,36 +76,35 @@ self.addEventListener('fetch', event => {
         headers.set('Access-Control-Allow-Origin', 'https://kolonelver1.github.io');
         headers.set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE');
         headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  
+
         const clonedResponse = new Response(response.body, {
           status: response.status,
           statusText: response.statusText,
           headers: headers
         });
-  
+
         return clonedResponse;
       })
       .catch(error => {
         console.error('Request failed:', error);
         return new Response('Request failed', { status: 500 });
       })
-  );  
+  );
 });
 
 // アクティベートイベントで古いキャッシュを削除
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(cacheNames => {
-      caches.keys().then(keys => console.log('Caches:', keys));
       return Promise.all(
         cacheNames.map(cacheName => {
           if (cacheName !== CACHE_NAME) {
-            console.log('Deleting old cache:', cacheName);
-            return caches.delete(cacheName); // 古いキャッシュを削除
+            console.log('Deleting old cache:', cacheName); // 古いキャッシュを削除
+            return caches.delete(cacheName);
           }
         })
       );
     })
   );
-  self.clients.claim(); // ページ制御を新しい SW に移行
+  self.clients.claim(); // 新しいSWが即座に制御を始めるようにする
 });
