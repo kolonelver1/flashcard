@@ -1,26 +1,38 @@
 'use strict'; // エラーがあれば表示、必ず先頭
 
-let flashcards = []; // フロントエンドで使用するためのグローバル変数
+let flashcards = [];
 
-document.addEventListener('DOMContentLoaded', async () => {
+// IndexedDBからフラッシュカードを取得
+const fetchFlashcards = async () => {
+  try {
+    // データベースが開かれていることを確認
+    await openDatabase();
 
-  const fetchFlashcards = async () => {
-    try {
-      // IndexedDBからフラッシュカードを取得
-      flashcards = await getAllFlashcards(); // IndexedDBから取得したデータをフロントエンドで使用
-      console.log("All flashcards:", flashcards); // コンソールに表示
-  
-      // ここでセレクトボックスの更新を行う
-      populateStudyDates('studyDatesSelect');
-      populateStudyDates('getQuizDate');
-      populateStudyLevel('getQuizLevel');
-    } catch (error) {
-      console.error("Error fetching flashcards from IndexedDB:", error);
-    }
+    // フラッシュカードを取得
+    flashcards = await getAllFlashcards(); // IndexedDBから取得
+    console.log("All flashcards:", flashcards); // コンソールに表示
+
+    // ここでセレクトボックスの更新を行う
+    populateStudyDates('studyDatesSelect');
+    populateStudyDates('getQuizDate');
+    populateStudyLevel('getQuizLevel');
+  } catch (error) {
+    console.error("Error fetching flashcards from IndexedDB:", error);
   }
-  
-  await fetchFlashcards();  
+};
 
+// 初期化処理を行う関数
+const initializeData = async () => {
+  try {
+    await openDatabase();  // 1回だけデータベースを開く
+    await fetchFlashcards();  // IndexedDBからフラッシュカードデータを取得
+  } catch (error) {
+    console.error("Error during initialization:", error);
+  }
+};
+
+// 初期化
+initializeData();
 
   // HTMLが読み込まれてから実行
   // document.addEventListener('DOMContentLoaded', async () => {
@@ -391,4 +403,3 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error("エラーが発生しました:", error);
       });
   };
-})
