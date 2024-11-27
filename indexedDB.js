@@ -58,3 +58,53 @@ const getAllFlashcards = () => {
     request.onerror = (event) => reject(event.target.error);
   });
 };
+
+const fetchAndSaveData = async () => {
+  const apiUrl = "https://my-flashcard-52952319bda7.herokuapp.com/api/flashcards";
+
+  try {
+    const response = await fetch(apiUrl);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const flashcards = await response.json();
+
+    await openDatabase();
+
+    for (const flashcard of flashcards) {
+      await saveFlashcard(flashcard);
+    }
+
+    console.log("All data saved to IndexedDB!");
+  } catch (error) {
+    console.error("Error fetching and saving data:", error);
+  }
+};
+
+// 3. IndexedDBからデータを取得してフロントエンドで使用するための関数
+let flashcards = [];
+
+const fetchFlashcards = async () => {
+  try {
+    await openDatabase();
+    flashcards = await getAllFlashcards(); // IndexedDBからデータを取得
+    console.log("Retrieved flashcards:", flashcards);
+  } catch (error) {
+    console.error("Error fetching flashcards from IndexedDB:", error);
+  }
+};
+
+// 4. 初期化処理を行う関数
+const initializeData = async () => {
+  // 1. APIからデータを取得してIndexedDBに保存
+  await fetchAndSaveData();
+
+  // 2. IndexedDBからデータを取得してフロントエンドで利用
+  await fetchFlashcards();
+
+  // flashcardsにはIndexedDBのデータが入っている
+  console.log(flashcards); // ここでグローバル変数flashcardsを使う
+};
+
+// 初期化
+initializeData();
