@@ -328,6 +328,9 @@ if (addButton) {
     // テキストボックスをクリア
     text.value = '';
     answerText.value = '';
+
+    fetchFlashcards()
+    
   });
 } else {
   console.error("Element with ID 'save' not found");
