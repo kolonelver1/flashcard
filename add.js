@@ -329,7 +329,8 @@ if (addButton) {
     text.value = '';
     answerText.value = '';
 
-    location.reload()
+    location.reload();
+    location.reload(); 
 
   });
 } else {
