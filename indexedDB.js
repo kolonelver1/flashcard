@@ -47,6 +47,46 @@ const getAllFlashcards = () => {
   });
 };
 
+/**
+ * フラッシュカードを IndexedDB に保存する関数
+ * @param {Object} flashcard - 保存するフラッシュカードデータ
+ */
+export async function saveFlashcard(flashcard) {
+  return new Promise((resolve, reject) => {
+    const dbRequest = indexedDB.open('flashcardDB', 1);
+
+    dbRequest.onerror = (event) => {
+      console.error('IndexedDB オープンエラー:', event.target.error);
+      reject(event.target.error);
+    };
+
+    dbRequest.onsuccess = (event) => {
+      const db = event.target.result;
+      const transaction = db.transaction('flashcards', 'readwrite');
+      const store = transaction.objectStore('flashcards');
+
+      const addRequest = store.add(flashcard); // データを追加
+
+      addRequest.onsuccess = () => {
+        console.log('IndexedDB にデータを保存しました:', flashcard);
+        resolve();
+      };
+
+      addRequest.onerror = (event) => {
+        console.error('IndexedDB 保存エラー:', event.target.error);
+        reject(event.target.error);
+      };
+    };
+
+    dbRequest.onupgradeneeded = (event) => {
+      const db = event.target.result;
+      if (!db.objectStoreNames.contains('flashcards')) {
+        db.createObjectStore('flashcards', { keyPath: '_id' }); // サーバーからのIDをキーとして使用
+      }
+    };
+  });
+}
+
 // IndexedDBから複数のフラッシュカードを削除
 const deleteFlashcardsFromIndexedDB = async (itemsToDelete) => {
   return new Promise((resolve, reject) => {
@@ -72,4 +112,4 @@ const deleteFlashcardsFromIndexedDB = async (itemsToDelete) => {
 };
 
 // openDatabase と getAllFlashcards をエクスポート
-export { openDatabase, getAllFlashcards, deleteFlashcardsFromIndexedDB };
+export { openDatabase, getAllFlashcards, deleteFlashcardsFromIndexedDB, saveFlashcard};

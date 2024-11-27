@@ -2,7 +2,7 @@
 
 let flashcards = [];
 // add.js の最初に indexedDB.js から openDatabase をインポート
-import { openDatabase, getAllFlashcards,deleteFlashcardsFromIndexedDB } from './indexedDB.js';
+import { openDatabase, getAllFlashcards, deleteFlashcardsFromIndexedDB, saveFlashcard } from './indexedDB.js';
 
 // IndexedDBからフラッシュカードを取得
 const fetchFlashcards = async () => {
@@ -256,57 +256,67 @@ document.getElementById('quiz').onclick = function () {
 };
 
 // 『add』ボタンの処理
-const addButton = document.getElementById('save'); // 『add』ボタンの設定
+const addButton = document.getElementById('save');
 if (addButton) {
-  // 保存ボタンが押された時の処理
-  addButton.addEventListener('click', (event) => {
+  addButton.addEventListener('click', async (event) => {
     event.preventDefault(); // フォームの送信を防ぐ
 
     // 入力フィールドの取得
-    const text = document.getElementById('quiz-text'); // 入力された新しい問題
-    const answerText = document.getElementById('answer-text'); // 入力された新しい答え
+    const text = document.getElementById('quiz-text');
+    const answerText = document.getElementById('answer-text');
 
     const today = new Date().toISOString(); // ISO形式で日付を取得
     const Level = "1"; // レベル
 
     const newFlashcard = {
-      question: text.value, // ユーザーが入力した問題
-      answer: answerText.value, // ユーザーが入力した答え
-      level: Level, // 固定のレベル
-      nextStudyDate: today // ISO形式で今日の日付
+      question: text.value,
+      answer: answerText.value,
+      level: Level,
+      nextStudyDate: today,
     };
 
-    // サーバーに新しいフラッシュカードを追加するリクエスト
-    fetch('https://my-flashcard-52952319bda7.herokuapp.com/api/flashcards', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newFlashcard),
-      mode: 'cors',  // CORSを有効にする
-      credentials: 'include',  // クッキーを含める
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        console.log('Success:', data);
-        // ここにフラッシュカード追加成功時の処理を書くことができます
-      })
-      .catch((error) => {
-        console.error('Error:', error);
+    try {
+      // サーバーに新しいデータを追加
+      const response = await fetch('https://my-flashcard-52952319bda7.herokuapp.com/api/flashcards', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newFlashcard),
       });
 
-    // テキストボックスをクリア
-    text.value = '';
-    answerText.value = ''; // 答えもクリア
-    location.reload(true);
+      if (!response.ok) throw new Error('Network response was not ok');
+
+      const savedData = await response.json(); // サーバーからの保存結果を取得
+
+      console.log('Success:', savedData);
+
+      // サーバーに保存されたデータを IndexedDB に追加
+      await saveFlashcard(savedData);
+
+      // フラッシュカードを再取得してセレクトボックスを更新
+      await fetchFlashcards();
+
+      // テキストボックスをクリア
+      text.value = '';
+      answerText.value = '';
+
+    } catch (error) {
+      console.error('Error:', error);
+    }
   });
 } else {
   console.error("Element with ID 'save' not found");
+}
+
+// フラッシュカードリストの再描画（例）
+function updateFlashcardList(flashcards) {
+  const flashcardList = document.getElementById('flashcardList'); // 例: HTMLリスト要素
+  flashcardList.innerHTML = ''; // 現在のリストをクリア
+
+  flashcards.forEach(card => {
+    const listItem = document.createElement('li');
+    listItem.textContent = `${card.question} - ${card.answer}`;
+    flashcardList.appendChild(listItem);
+  });
 }
 
 // 問題削除の処理
@@ -353,7 +363,7 @@ window.deleteSelected = function () {
         console.error("IndexedDB削除エラー:", error);
       }
 
-      // location.reload(); // ページをリロード
+      location.reload(); // ページをリロード
     })
     .catch(error => console.error("削除エラー:", error));
 };
