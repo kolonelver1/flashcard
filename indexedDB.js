@@ -13,7 +13,7 @@ const openDatabase = () => {
     request.onupgradeneeded = (event) => {
       db = event.target.result;
       if (!db.objectStoreNames.contains("flashcards")) {
-        const store = db.createObjectStore("flashcards", { keyPath: "id" });
+        const store = db.createObjectStore("flashcards", { keyPath: "_id" });
         store.createIndex("question", "question", { unique: false });
         store.createIndex("answer", "answer", { unique: false });
         store.createIndex("nextStudeday", "nextStudeday", { unique: false });
