@@ -1,6 +1,8 @@
 'use strict'; // エラーがあれば表示、必ず先頭
 
 let flashcards = [];
+// add.js の最初に indexedDB.js から openDatabase をインポート
+import { openDatabase, getAllFlashcards } from './indexedDB.js';
 
 // IndexedDBからフラッシュカードを取得
 const fetchFlashcards = async () => {
