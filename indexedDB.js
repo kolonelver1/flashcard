@@ -69,9 +69,12 @@ const fetchAndSaveData = async () => {
     }
     const flashcards = await response.json();
 
+    console.log("Fetched flashcards:", flashcards); // APIから取得したデータを確認
+
     await openDatabase();
 
     for (const flashcard of flashcards) {
+      console.log("Saving flashcard:", flashcard); // 各flashcardの内容を確認
       await saveFlashcard(flashcard);
     }
 
