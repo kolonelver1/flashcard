@@ -38,6 +38,8 @@ const saveFlashcard = (flashcard) => {
       flashcard.id = flashcard._id; // _idをidとして設定
     }
 
+    console.log("Saving flashcard with id:", flashcard.id); // idの確認ログ
+
     if (!flashcard.id) {
       console.error("Missing id in flashcard:", flashcard);
       return reject(new Error("Missing id"));
