@@ -11,7 +11,7 @@ const openDatabase = () => {
     request.onupgradeneeded = (event) => {
       db = event.target.result;
       if (!db.objectStoreNames.contains("flashcards")) {
-        const store = db.createObjectStore("flashcards", { keyPath: "_id" }); // _idをkeyPathとして設定
+        const store = db.createObjectStore("flashcards", { keyPath: "id" }); // keyPathを"id"に変更
         store.createIndex("question", "question", { unique: false });
         store.createIndex("answer", "answer", { unique: false });
         store.createIndex("nextStudeday", "nextStudeday", { unique: false });
@@ -33,11 +33,16 @@ const openDatabase = () => {
 // データを保存する
 const saveFlashcard = (flashcard) => {
   return new Promise((resolve, reject) => {
-    if (!flashcard._id) {
-      console.error("Missing _id in flashcard:", flashcard);
-      return reject(new Error("Missing _id"));
+    // flashcard.idが設定されていない場合、_idをidとして設定
+    if (!flashcard.id && flashcard._id) {
+      flashcard.id = flashcard._id; // _idをidとして設定
     }
-    
+
+    if (!flashcard.id) {
+      console.error("Missing id in flashcard:", flashcard);
+      return reject(new Error("Missing id"));
+    }
+
     const transaction = db.transaction("flashcards", "readwrite");
     const store = transaction.objectStore("flashcards");
     const request = store.put(flashcard);
