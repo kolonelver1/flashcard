@@ -93,21 +93,21 @@ const flashcardSchema = new mongoose.Schema({
 const Flashcard = mongoose.model('Flashcard', flashcardSchema);
 
 // スクロールの読み込み処理
-app.get('/questions', async (req, res) => {
-  //questionsに対するリクエストを受け付け、非同期関数でデータを取得・処理
-  const page = parseInt(req.query.page) || 1;//受け取ったページ番号読み込み.デフォ１
-  const limit = parseInt(req.query.limit) || 10;//ページあたりのデータ数読み込みデフォ10
-  const skip = (page - 1) * limit;//データを取得する際に、どこから取得を始めるかを指定
+// app.get('/questions', async (req, res) => {
+//   //questionsに対するリクエストを受け付け、非同期関数でデータを取得・処理
+//   const page = parseInt(req.query.page) || 1;//受け取ったページ番号読み込み.デフォ１
+//   const limit = parseInt(req.query.limit) || 10;//ページあたりのデータ数読み込みデフォ10
+//   const skip = (page - 1) * limit;//データを取得する際に、どこから取得を始めるかを指定
 
-  try {
-    const questions = await Flashcard.find().skip(skip).limit(limit);
-    //表示データをquestionsに収納
-    res.status(200).send(questions);//ステータスコード200を設定、questionsを送る
-  } catch (err) { //エラーハンドリング
-    console.error('Error fetching questions:', err);
-    res.status(500).send({ error: 'データの取得に失敗しました' });//ステータスコード500を設定、エラーを送る
-  }
-});
+//   try {
+//     const questions = await Flashcard.find().skip(skip).limit(limit);
+//     //表示データをquestionsに収納
+//     res.status(200).send(questions);//ステータスコード200を設定、questionsを送る
+//   } catch (err) { //エラーハンドリング
+//     console.error('Error fetching questions:', err);
+//     res.status(500).send({ error: 'データの取得に失敗しました' });//ステータスコード500を設定、エラーを送る
+//   }
+// });
 
 // フラッシュカードの一覧を取得するエンドポイント
 app.get('/api/flashcards', async (req, res) => {

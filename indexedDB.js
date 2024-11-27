@@ -15,6 +15,8 @@ export const openDatabase = () => {
         const store = db.createObjectStore("flashcards", { keyPath: "id" });
         store.createIndex("question", "question", { unique: false });
         store.createIndex("answer", "answer", { unique: false });
+        store.createIndex("nextStudeday", "nextStudeday", { unique: false });
+        store.createIndex("Level", "Level", { unique: false });
       }
     };
 

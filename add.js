@@ -1,30 +1,39 @@
 'use strict'; // エラーがあれば表示、必ず先頭
 
-let flashcards = [];  // グローバルに宣言
+import { openDatabase, getAllFlashcards } from './indexedDB'; // IndexedDB.js をインポート
 
-// HTMLが読み込まれてから実行
+let flashcards = []; // グローバルに宣言
+
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    const apiUrl = 'https://my-flashcard-52952319bda7.herokuapp.com/api/flashcards';
-
-    const response = await fetch(apiUrl, {
-      // 自己署名証明書のエラーを無視する場合、以下のオプションを追加することも可能
-      // credentials: 'same-origin',  // Cookieなどを必要とする場合
-      headers: {
-        'Content-Type': 'application/json',
-        // 必要ならばAuthorizationヘッダーを追加
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    flashcards = await response.json();
+    await openDatabase();
+    flashcards = await getAllFlashcards();
     console.log(flashcards); // コンソールで取得したデータを確認
   } catch (error) {
-    console.error('Error fetching questions:', error);
+    console.error('IndexedDBのデータ取得エラー:', error);
   }
+
+  // HTMLが読み込まれてから実行
+  // document.addEventListener('DOMContentLoaded', async () => {
+  //   try {
+  //     const apiUrl = 'https://my-flashcard-52952319bda7.herokuapp.com/api/flashcards';
+
+  //     const response = await fetch(apiUrl, {
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  // 必要ならばAuthorizationヘッダーを追加
+  //     },
+  //   });
+
+  //   if (!response.ok) {
+  //     throw new Error(`HTTP error! status: ${response.status}`);
+  //   }
+
+  //   flashcards = await response.json();
+  //   console.log(flashcards); // コンソールで取得したデータを確認
+  // } catch (error) {
+  //   console.error('Error fetching questions:', error);
+  // }
 
   // 日付問題を取得する関数loadQuestionsの定義
   async function loadQuestions() {
@@ -324,7 +333,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   window.checkedQuestions = function () {
     const form = document.getElementById("deleteForm");
     const formData = new FormData(form);
-  
+
     // 選択されたチェックボックスの値を取得
     const checkedItems = [];
     formData.forEach((value, key) => {
@@ -332,18 +341,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         checkedItems.push(value);
       }
     });
-  
+
     console.log("取得対象のアイテム:", checkedItems);
-  
+
     if (checkedItems.length === 0) {
       console.warn("取得するアイテムが選択されていません");
       return;
     }
-  
+
     // textarea 要素を取得
     const quizTextArea = document.getElementById("quiz-text");
     const answerTextArea = document.getElementById("answer-text");
-  
+
     // APIリクエストを使って選択された問題の詳細を取得
     fetch('https://my-flashcard-52952319bda7.herokuapp.com/api/flashcards/checked', {
       method: 'POST',
@@ -360,23 +369,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         // APIから取得したデータを使って問題と回答を転記
         let selectedQuestions = [];
         let selectedAnswers = [];
-  
+
         // 取得したデータを問題文と回答に分けて配列に格納
         data.forEach(item => {
           selectedQuestions.push(item.question);
           selectedAnswers.push(item.answer);
         });
-  
+
         // 問題と回答をtextareaにセット
         quizTextArea.value = selectedQuestions.join("\n");
         answerTextArea.value = selectedAnswers.join("\n");
-  
+
         console.log("表示された問題:", selectedQuestions);
         console.log("表示された回答:", selectedAnswers);
       })
       .catch(error => {
         console.error("エラーが発生しました:", error);
       });
-  };  
+  };
 
 })
