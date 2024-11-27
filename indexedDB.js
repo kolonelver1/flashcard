@@ -47,5 +47,29 @@ const getAllFlashcards = () => {
   });
 };
 
+// IndexedDBから複数のフラッシュカードを削除
+const deleteFlashcardsFromIndexedDB = async (itemsToDelete) => {
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction("flashcards", "readwrite");
+    const store = transaction.objectStore("flashcards");
+
+    // 選択されたアイテムを1つずつ削除
+    let deleteCount = 0;
+    itemsToDelete.forEach(id => {
+      const request = store.delete(id);
+      request.onsuccess = () => {
+        deleteCount++;
+        if (deleteCount === itemsToDelete.length) {
+          resolve();
+        }
+      };
+      request.onerror = (event) => {
+        console.error("IndexedDB削除エラー:", event.target.error);
+        reject(event.target.error);
+      };
+    });
+  });
+};
+
 // openDatabase と getAllFlashcards をエクスポート
-export { openDatabase, getAllFlashcards };
+export { openDatabase, getAllFlashcards, deleteFlashcardsFromIndexedDB };
