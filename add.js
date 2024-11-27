@@ -2,7 +2,7 @@
 
 let flashcards = [];
 // add.js の最初に indexedDB.js から openDatabase をインポート
-import { openDatabase, getAllFlashcards } from './indexedDB.js';
+import { openDatabase, getAllFlashcards,deleteFlashcardsFromIndexedDB } from './indexedDB.js';
 
 // IndexedDBからフラッシュカードを取得
 const fetchFlashcards = async () => {
