@@ -1,8 +1,10 @@
 'use strict'; // エラーあれば表示、必ず先頭
 
+let dateParam = [];  // グローバルに宣言
 let flashcards = [];
+
 // add.js の最初に indexedDB.js から openDatabase をインポート
-import { openDatabase, getAllFlashcards} from './indexedDB.js';
+import { openDatabase, getAllFlashcards } from './indexedDB.js';
 
 // IndexedDBからフラッシュカードを取得
 const fetchFlashcards = async () => {
@@ -55,19 +57,35 @@ document.addEventListener("DOMContentLoaded", async () => {
   await initializeData(); // 初期化処理
 
   const urlParams = new URLSearchParams(window.location.search);
-  const dateParam = urlParams.get('date');
+  dateParam = urlParams.get('date');
 
-  // フラッシュカードをフィルタリング
-  const matchingCards = getMatchingCards(dateParam);
+  // 問題を表示させる処理
+  try {
+    console.log("Fetched Flashcards:", flashcards); // 取得したフラッシュカードを表示
 
-  // 問題表示エリア
-  const quizDisplay = document.getElementById('mainQuiz');
-  if (matchingCards.length > 0 && matchingCards[0].question) {
-    quizDisplay.value = matchingCards[0].question; // 最初のフラッシュカードの質問を表示
-  } else {
-    alert("本日の学習分は終了です　問題一覧に遷移します");
-    window.location.href = "index.html"; // 一覧ページに遷移
-    console.error('No matching flashcards available for the selected date or missing question property');
+    // nextStudyDateが一致するフラッシュカードをフィルタリング
+    const matchingCards = flashcards.filter(card => {
+      // nextStudyDate が null または undefined でないことを確認
+      if (card.nextStudyDate) {
+        const cardDate = card.nextStudyDate.split('T')[0];
+        return cardDate === dateParam.replace(/\//g, '-');
+      }
+      return false;  // nextStudyDate が無効な場合、フィルタリングしない
+    });
+
+    console.log("Matching Flashcards:", matchingCards); // 一致するフラッシュカードを表示
+
+    // 問題表示エリア
+    const quizDisplay = document.getElementById('mainQuiz');
+    if (matchingCards.length > 0 && matchingCards[0].question) {
+      quizDisplay.value = matchingCards[0].question; // 最初のフラッシュカードの質問を表示
+    } else {
+      alert("本日の学習分は終了です　問題一覧に遷移します");
+      window.location.href = "index.html"; // 一覧ページに遷移
+      console.error('No matching flashcards available for the selected date or missing question property');
+    }
+  } catch (error) {
+    console.error('Error fetching flashcards:', error);
   }
 
   // 『解答する』ボタンの処理

@@ -37,6 +37,7 @@ initializeData();
 document.addEventListener("DOMContentLoaded", async () => {
 
   await initializeData();
+  
   //URLパラメータから日付データ取得
   const urlParams = new URLSearchParams(window.location.search);
   dateParam = urlParams.get('date');
