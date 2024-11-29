@@ -1,53 +1,40 @@
 'use strict'; // エラーあれば表示、必ず先頭
 
 let flashcards = [];
+// add.js の最初に indexedDB.js から openDatabase をインポート
+import { openDatabase, getAllFlashcards} from './indexedDB.js';
 
-// indexedDB.jsから必要な関数をインポート
-import { openDatabase, getAllFlashcards } from './indexedDB.js';
-
-// IndexedDBから最新データを取得する関数
+// IndexedDBからフラッシュカードを取得
 const fetchFlashcards = async () => {
   try {
-    await openDatabase(); // IndexedDBを開く
+    // データベースが開かれていることを確認
+    await openDatabase();
 
-    flashcards = await getAllFlashcards(); // 全てのフラッシュカードを取得
-    console.log("Fetched flashcards:", flashcards); // デバッグ用ログ
+    // フラッシュカードを取得
+    flashcards = await getAllFlashcards(); // IndexedDBから取得
+    console.log("All flashcards:", flashcards); // コンソールに表示
   } catch (error) {
     console.error("Error fetching flashcards from IndexedDB:", error);
   }
 };
 
-// 指定された日付に一致するフラッシュカードをフィルタリング
-const getMatchingCards = (dateParam) => {
-  if (!dateParam) {
-    console.error('Date parameter is missing or invalid');
-    return [];
-  }
-
-  const matchingCards = flashcards.filter(card => {
-    if (card.nextStudyDate) {
-      const cardDate = card.nextStudyDate.split('T')[0];
-      return cardDate === dateParam.replace(/\//g, '-');
-    }
-    return false;
-  });
-
-  console.log("Matching flashcards:", matchingCards);
-  return matchingCards;
-};
-
-// 初期化処理
+// 初期化処理を行う関数
 const initializeData = async () => {
   try {
-    await fetchFlashcards(); // IndexedDBから最新データを取得
+    await openDatabase();  // 1回だけデータベースを開く
+    await fetchFlashcards();  // IndexedDBからフラッシュカードデータを取得
   } catch (error) {
     console.error("Error during initialization:", error);
   }
 };
 
-// DOMの読み込み後に実行
+// 初期化
+initializeData();
+
+//HTMLが読み込まれてから実行
 document.addEventListener("DOMContentLoaded", async () => {
-  await initializeData(); // 初期化処理
+
+  await initializeData();
 
   const urlParams = new URLSearchParams(window.location.search);
   const dateParam = urlParams.get('date');
