@@ -4,7 +4,7 @@ let dateParam = [];  // グローバルに宣言
 
 let flashcards = [];
 // add.js の最初に indexedDB.js から openDatabase をインポート
-import { openDatabase, getAllFlashcards, deleteFlashcardsFromIndexedDB, saveFlashcard } from './indexedDB.js';
+import { openDatabase, getAllFlashcards, updateFlashcardInIndexedDB, deleteFlashcardsFromIndexedDB, saveFlashcard } from './indexedDB.js';
 
 // IndexedDBからフラッシュカードを取得
 const fetchFlashcards = async () => {
@@ -165,6 +165,33 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             //関数の実行
             await updateLevel(currentCard._id, difficulty);
+
+            const updateFlashcard = async (id, difficulty) => {
+              try {
+                const response = await fetch(`/api/flashcards/${id}`, {
+                  method: 'PUT',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ difficulty }),
+                });
+
+                if (!response.ok) throw new Error(`Failed to update flashcard: ${response.status}`);
+
+                const updatedFlashcard = await response.json(); // サーバーからの更新データ
+                console.log('Updated flashcard from server:', updatedFlashcard);
+
+                // IndexedDBを更新
+                await updateFlashcardInIndexedDB(updatedFlashcard);
+              } catch (error) {
+                console.error('Error updating flashcard:', error);
+              }
+            };
+
+            // 使用例（回答後の次回学習日を更新）
+            const onAnswerSubmit = async (flashcardId, difficulty) => {
+              await updateFlashcard(flashcardId, difficulty);
+              console.log('Answer submitted and local data updated');
+            };
+
 
             // 更新後に問題ページへ遷移
             window.location.href = `quiz.html?date=${encodeURIComponent(dateParam)}`;

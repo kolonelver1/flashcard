@@ -117,5 +117,21 @@ const deleteFlashcardsFromIndexedDB = async (itemsToDelete) => {
   });
 };
 
+export const updateFlashcardInIndexedDB = async (updatedFlashcard) => {
+  try {
+    const db = await openDatabase(); // データベースを開く
+    const tx = db.transaction('flashcards', 'readwrite');
+    const store = tx.objectStore('flashcards');
+
+    // 更新データを保存
+    await store.put(updatedFlashcard);
+    await tx.complete;
+    console.log('Flashcard updated in IndexedDB:', updatedFlashcard);
+  } catch (error) {
+    console.error('Failed to update flashcard in IndexedDB:', error);
+  }
+};
+
+
 // openDatabase と getAllFlashcards をエクスポート
 export { openDatabase, getAllFlashcards, deleteFlashcardsFromIndexedDB };

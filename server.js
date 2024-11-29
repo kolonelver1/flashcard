@@ -215,25 +215,27 @@ const updateNextStudyDate = (level) => {
 
 // フラッシュカードのレベルと次回学習日の更新エンドポイント
 app.put('/api/flashcards/:id', async (req, res) => {
-  console.log('PUT request received for cardId:', req.params.id);  // リクエスト受信時のログ
+  console.log('PUT request received for cardId:', req.params.id); // リクエスト受信時のログ
   const { id } = req.params;
   const { difficulty } = req.body;
 
+  // IDの形式チェック
   if (!ObjectId.isValid(id)) {
     return res.status(400).json({ error: 'Invalid ID format' });
   }
 
   try {
+    // フラッシュカードを取得
     const flashcard = await Flashcard.findById(id);
     if (!flashcard) {
       return res.status(404).json({ error: 'Flashcard not found' });
     }
 
-    // レベルの計算
+    // 難易度に基づいてレベルを更新
     switch (difficulty) {
       case 'rmake':
         flashcard.level = 0;
-        flashcard.nextStudyDate = null;  // 次回学習日をnullに設定
+        flashcard.nextStudyDate = null; // 次回学習日をnullに設定
         break;
       case 'easy':
         flashcard.level += 3;
@@ -248,10 +250,10 @@ app.put('/api/flashcards/:id', async (req, res) => {
         flashcard.level = 1;
         break;
       default:
-        return res.status(400).json({ message: 'Invalid difficulty' });
+        return res.status(400).json({ error: 'Invalid difficulty' });
     }
 
-    // レベルに基づいて次回学習日を更新
+    // 次回学習日を更新
     if (flashcard.level !== 0) {
       flashcard.nextStudyDate = updateNextStudyDate(flashcard.level);
     } else {
@@ -259,17 +261,23 @@ app.put('/api/flashcards/:id', async (req, res) => {
     }
 
     // 更新後のフラッシュカードを保存
-    try {
-      const updatedFlashcard = await flashcard.save();
-      res.status(200).json(updatedFlashcard);
-    } catch (saveError) {
-      console.error('Error saving flashcard:', saveError);
-      res.status(500).json({ error: 'Error saving flashcard' });
-    }
+    const updatedFlashcard = await flashcard.save();
+
+    // 成功時のレスポンス
+    res.status(200).json({
+      message: 'Flashcard updated successfully',
+      data: updatedFlashcard, // フロントエンドで利用できる更新済みデータ
+    });
 
   } catch (error) {
-    console.error('Error updating flashcard level:', error);
-    res.status(500).send('Internal Server Error');
+    console.error('Error updating flashcard:', error);
+
+    // どこで問題が発生したかに応じたエラーメッセージを返す
+    if (error.name === 'ValidationError') {
+      res.status(400).json({ error: 'Validation error', details: error.message });
+    } else {
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
   }
 });
 
