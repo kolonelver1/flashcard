@@ -125,6 +125,21 @@ const deleteFlashcardsFromIndexedDB = async (itemsToDelete) => {
   });
 };
 
+// フラッシュカードを更新
+export const updateFlashcardInDB = (updatedCard) => {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open('FlashcardsDB', 1);
+    request.onsuccess = (e) => {
+      const db = e.target.result;
+      const transaction = db.transaction('flashcards', 'readwrite');
+      const store = transaction.objectStore('flashcards');
+      const putRequest = store.put(updatedCard); // 更新用にputを使用
+      putRequest.onsuccess = () => resolve(updatedCard);
+      putRequest.onerror = (e) => reject('Error updating flashcard: ' + e.target.error);
+    };
+  });
+};
+
 export const updateFlashcardInIndexedDB = async (updatedFlashcard) => {
   try {
     const db = await openDatabase();
