@@ -31,20 +31,24 @@ const openDatabase = () => {
 };
 
 // すべてのフラッシュカードを取得する
-const getAllFlashcards = () => {
+const getAllFlashcards = async () => {
   return new Promise((resolve, reject) => {
-    const transaction = db.transaction("flashcards", "readonly");
-    const store = transaction.objectStore("flashcards");
-    const request = store.getAll();
+    openDatabase().then(db => {
+      const transaction = db.transaction("flashcards", "readonly");
+      const store = transaction.objectStore("flashcards");
+      const request = store.getAll();
 
-    request.onerror = function () {
-      reject('Error fetching flashcards from IndexedDB');
-    };
+      request.onerror = function () {
+        reject('Error fetching flashcards from IndexedDB');
+      };
 
-    request.onsuccess = function () {
-      console.log('Fetched flashcards:', request.result);  // データを確認
-      resolve(request.result);
-    };
+      request.onsuccess = function () {
+        console.log('Fetched flashcards:', request.result);  // データを確認
+        resolve(request.result);
+      };
+    }).catch(error => {
+      reject('Failed to open database: ' + error);
+    });
   });
 };
 
