@@ -62,15 +62,7 @@ const getAllFlashcards = async () => {
  */
 export async function saveFlashcard(flashcard) {
   return new Promise((resolve, reject) => {
-    const dbRequest = indexedDB.open('flashcardDB', 1);
-
-    dbRequest.onerror = (event) => {
-      console.error('IndexedDB オープンエラー:', event.target.error);
-      reject(event.target.error);
-    };
-
-    dbRequest.onsuccess = (event) => {
-      const db = event.target.result;
+    openDatabase().then(db => {
       const transaction = db.transaction('flashcards', 'readwrite');
       const store = transaction.objectStore('flashcards');
 
@@ -90,37 +82,38 @@ export async function saveFlashcard(flashcard) {
         console.error('IndexedDB 保存エラー:', event.target.error);
         reject(event.target.error);
       };
-    };
-
-    dbRequest.onupgradeneeded = (event) => {
-      const db = event.target.result;
-      if (!db.objectStoreNames.contains('flashcards')) {
-        db.createObjectStore('flashcards', { keyPath: '_id' }); // _idをキーとして使用
-      }
-    };
+    }).catch(error => {
+      console.error("Failed to open database for saving flashcard:", error);
+      reject("Failed to open database for saving flashcard");
+    });
   });
 }
 
 // IndexedDBから複数のフラッシュカードを削除
 const deleteFlashcardsFromIndexedDB = async (itemsToDelete) => {
   return new Promise((resolve, reject) => {
-    const transaction = db.transaction("flashcards", "readwrite");
-    const store = transaction.objectStore("flashcards");
+    openDatabase().then(db => {
+      const transaction = db.transaction("flashcards", "readwrite");
+      const store = transaction.objectStore("flashcards");
 
-    // 選択されたアイテムを1つずつ削除
-    let deleteCount = 0;
-    itemsToDelete.forEach(id => {
-      const request = store.delete(id);
-      request.onsuccess = () => {
-        deleteCount++;
-        if (deleteCount === itemsToDelete.length) {
-          resolve();
-        }
-      };
-      request.onerror = (event) => {
-        console.error("IndexedDB削除エラー:", event.target.error);
-        reject(event.target.error);
-      };
+      // 選択されたアイテムを1つずつ削除
+      let deleteCount = 0;
+      itemsToDelete.forEach(id => {
+        const request = store.delete(id);
+        request.onsuccess = () => {
+          deleteCount++;
+          if (deleteCount === itemsToDelete.length) {
+            resolve();
+          }
+        };
+        request.onerror = (event) => {
+          console.error("IndexedDB削除エラー:", event.target.error);
+          reject(event.target.error);
+        };
+      });
+    }).catch(error => {
+      console.error("Failed to open database for deleting flashcards:", error);
+      reject("Failed to open database for deleting flashcards");
     });
   });
 };
@@ -128,29 +121,23 @@ const deleteFlashcardsFromIndexedDB = async (itemsToDelete) => {
 // フラッシュカードを更新
 export const updateFlashcardInDB = (updatedCard) => {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open('FlashcardsDB', 1);
-    request.onsuccess = (e) => {
-      const db = e.target.result;
+    openDatabase().then(db => {
       const transaction = db.transaction('flashcards', 'readwrite');
       const store = transaction.objectStore('flashcards');
       const putRequest = store.put(updatedCard); // 更新用にputを使用
+
       putRequest.onsuccess = () => resolve(updatedCard);
       putRequest.onerror = (e) => reject('Error updating flashcard: ' + e.target.error);
-    };
+    }).catch(error => {
+      console.error("Failed to open database for updating flashcard:", error);
+      reject("Failed to open database for updating flashcard");
+    });
   });
 };
 
 export const updateFlashcardInIndexedDB = async (updatedFlashcard) => {
   try {
-    const db = await openDatabase();
-    const tx = db.transaction('flashcards', 'readwrite');
-    const store = tx.objectStore('flashcards');
-
-    // 更新データを保存
-    await store.put(updatedFlashcard);
-    await tx.complete;
-    console.log('Flashcard updated in IndexedDB:', updatedFlashcard);
-    
+    await updateFlashcardInDB(updatedFlashcard);
     // 更新後にフラッシュカードを再取得
     const updatedFlashcards = await getAllFlashcards();
     console.log('Updated Flashcards:', updatedFlashcards);
@@ -158,7 +145,6 @@ export const updateFlashcardInIndexedDB = async (updatedFlashcard) => {
     console.error('Failed to update flashcard in IndexedDB:', error);
   }
 };
-
 
 // openDatabase と getAllFlashcards をエクスポート
 export { openDatabase, getAllFlashcards, deleteFlashcardsFromIndexedDB };
