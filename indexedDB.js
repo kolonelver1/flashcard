@@ -123,7 +123,7 @@ const deleteFlashcardsFromIndexedDB = async (itemsToDelete) => {
 
 export const updateFlashcardInIndexedDB = async (updatedFlashcard) => {
   try {
-    const db = await openDatabase(); // データベースを開く
+    const db = await openDatabase();
     const tx = db.transaction('flashcards', 'readwrite');
     const store = tx.objectStore('flashcards');
 
@@ -131,6 +131,10 @@ export const updateFlashcardInIndexedDB = async (updatedFlashcard) => {
     await store.put(updatedFlashcard);
     await tx.complete;
     console.log('Flashcard updated in IndexedDB:', updatedFlashcard);
+    
+    // 更新後にフラッシュカードを再取得
+    const updatedFlashcards = await getAllFlashcards();
+    console.log('Updated Flashcards:', updatedFlashcards);
   } catch (error) {
     console.error('Failed to update flashcard in IndexedDB:', error);
   }
