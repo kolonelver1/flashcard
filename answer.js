@@ -4,7 +4,7 @@ let dateParam = [];  // グローバルに宣言
 
 let flashcards = [];
 // add.js の最初に indexedDB.js から openDatabase をインポート
-import { openDatabase, getAllFlashcards, updateFlashcardInIndexedDB, deleteFlashcardsFromIndexedDB, saveFlashcard } from './indexedDB.js';
+import { openDatabase, getAllFlashcards, updateFlashcardInIndexedDB} from './indexedDB.js';
 
 // IndexedDBからフラッシュカードを取得
 const fetchFlashcards = async () => {
@@ -164,13 +164,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 console.error('Error updating flashcard:', error);
               }
             };
-
-            // 使用例（回答後の次回学習日を更新）
-            const onAnswerSubmit = async (flashcardId, difficulty) => {
-              await updateFlashcard(flashcardId, difficulty);
-              console.log('Answer submitted and local data updated');
-            };
-
 
             // 更新後に問題ページへ遷移
             window.location.href = `quiz.html?date=${encodeURIComponent(dateParam)}`;
