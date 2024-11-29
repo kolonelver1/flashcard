@@ -31,10 +31,28 @@ const initializeData = async () => {
 // 初期化
 initializeData();
 
-//HTMLが読み込まれてから実行
-document.addEventListener("DOMContentLoaded", async () => {
+// 指定された日付に一致するフラッシュカードをフィルタリング
+const getMatchingCards = (dateParam) => {
+  if (!dateParam) {
+    console.error('Date parameter is missing or invalid');
+    return [];
+  }
 
-  await initializeData();
+  const matchingCards = flashcards.filter(card => {
+    if (card.nextStudyDate) {
+      const cardDate = card.nextStudyDate.split('T')[0];
+      return cardDate === dateParam.replace(/\//g, '-');
+    }
+    return false;
+  });
+
+  console.log("Matching flashcards:", matchingCards);
+  return matchingCards;
+};
+
+// DOMの読み込み後に実行
+document.addEventListener("DOMContentLoaded", async () => {
+  await initializeData(); // 初期化処理
 
   const urlParams = new URLSearchParams(window.location.search);
   const dateParam = urlParams.get('date');
