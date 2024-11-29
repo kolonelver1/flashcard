@@ -15,11 +15,6 @@ const fetchFlashcards = async () => {
     // フラッシュカードを取得
     flashcards = await getAllFlashcards(); // IndexedDBから取得
     console.log("All flashcards:", flashcards); // コンソールに表示
-
-    // ここでセレクトボックスの更新を行う
-    populateStudyDates('studyDatesSelect');
-    populateStudyDates('getQuizDate');
-    populateStudyLevel('getQuizLevel');
   } catch (error) {
     console.error("Error fetching flashcards from IndexedDB:", error);
   }
