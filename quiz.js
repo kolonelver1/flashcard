@@ -68,12 +68,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (letgoButton) {
     letgoButton.onclick = async () => {
       if (dateParam) {
-        // IndexedDB内で更新を行う
-        await updateFlashcardsInIndexedDB();  // IndexedDB内で更新
-
-        // APIサーバーに対して非同期で更新リクエストを送信
-        updateFlashcardsInAPI();  // ここではawaitしないのでバックグラウンドで送信
-
         // 次のページに遷移
         window.location.href = `answer.html?date=${encodeURIComponent(dateParam)}`; // 日付を渡して遷移
       } else {
