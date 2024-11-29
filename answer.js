@@ -43,22 +43,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 解答を表示させる処理
   try {
-    // const apiUrl = 'https://my-flashcard-52952319bda7.herokuapp.com/api/flashcards';
-
-    // const response = await fetch(apiUrl, {
-    //   // 自己署名証明書のエラーを無視する場合、以下のオプションを追加することも可能
-    //   // credentials: 'same-origin',  // Cookieなどを必要とする場合
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     // 必要ならばAuthorizationヘッダーを追加
-    //   },
-    // });
-
-    // if (!response.ok) {
-    //   throw new Error(`HTTP error! status: ${response.status}`);
-    // }
-
-    // flashcards = await response.json();
     console.log("Fetched Flashcards:", flashcards); // 取得したフラッシュカードを表示
 
     // nextStudyDateが一致するフラッシュカードをフィルタリング
