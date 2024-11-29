@@ -126,10 +126,16 @@ export const updateFlashcardInDB = (updatedCard) => {
       const store = transaction.objectStore('flashcards');
       const putRequest = store.put(updatedCard); // 更新用にputを使用
 
-      putRequest.onsuccess = () => resolve(updatedCard);
-      putRequest.onerror = (e) => reject('Error updating flashcard: ' + e.target.error);
+      putRequest.onsuccess = () => {
+        console.log('Flashcard updated:', updatedCard);
+        resolve(updatedCard);
+      };
+      putRequest.onerror = (e) => {
+        console.error('Error updating flashcard:', e.target.error);
+        reject('Error updating flashcard: ' + e.target.error);
+      };
     }).catch(error => {
-      console.error("Failed to open database for updating flashcard:", error);
+      console.error('Failed to open database for updating flashcard:', error);
       reject("Failed to open database for updating flashcard");
     });
   });
@@ -137,10 +143,14 @@ export const updateFlashcardInDB = (updatedCard) => {
 
 export const updateFlashcardInIndexedDB = async (updatedFlashcard) => {
   try {
+    // 更新処理
     await updateFlashcardInDB(updatedFlashcard);
+    
     // 更新後にフラッシュカードを再取得
     const updatedFlashcards = await getAllFlashcards();
     console.log('Updated Flashcards:', updatedFlashcards);
+    
+    // 必要なら、ここで次回学習日の設定やカードの再表示を行う
   } catch (error) {
     console.error('Failed to update flashcard in IndexedDB:', error);
   }
