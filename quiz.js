@@ -34,23 +34,23 @@ const initializeData = async () => {
 initializeData();
 
 // 指定された日付に一致するフラッシュカードをフィルタリング
-const getMatchingCards = (dateParam) => {
-  if (!dateParam) {
-    console.error('Date parameter is missing or invalid');
-    return [];
-  }
+// const getMatchingCards = (dateParam) => {
+//   if (!dateParam) {
+//     console.error('Date parameter is missing or invalid');
+//     return [];
+//   }
 
-  const matchingCards = flashcards.filter(card => {
-    if (card.nextStudyDate) {
-      const cardDate = card.nextStudyDate.split('T')[0];
-      return cardDate === dateParam.replace(/\//g, '-');
-    }
-    return false;
-  });
+//   const matchingCards = flashcards.filter(card => {
+//     if (card.nextStudyDate) {
+//       const cardDate = card.nextStudyDate.split('T')[0];
+//       return cardDate === dateParam.replace(/\//g, '-');
+//     }
+//     return false;
+//   });
 
-  console.log("Matching flashcards:", matchingCards);
-  return matchingCards;
-};
+//   console.log("Matching flashcards:", matchingCards);
+//   return matchingCards;
+// };
 
 // DOMの読み込み後に実行
 document.addEventListener("DOMContentLoaded", async () => {
