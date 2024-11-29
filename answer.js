@@ -1,33 +1,69 @@
 'use strict'; // エラーあれば表示、必ず先頭
 
-let flashcards = [];  // グローバルに宣言
 let dateParam = [];  // グローバルに宣言
+
+let flashcards = [];
+// add.js の最初に indexedDB.js から openDatabase をインポート
+import { openDatabase, getAllFlashcards, deleteFlashcardsFromIndexedDB, saveFlashcard } from './indexedDB.js';
+
+// IndexedDBからフラッシュカードを取得
+const fetchFlashcards = async () => {
+  try {
+    // データベースが開かれていることを確認
+    await openDatabase();
+
+    // フラッシュカードを取得
+    flashcards = await getAllFlashcards(); // IndexedDBから取得
+    console.log("All flashcards:", flashcards); // コンソールに表示
+
+    // ここでセレクトボックスの更新を行う
+    populateStudyDates('studyDatesSelect');
+    populateStudyDates('getQuizDate');
+    populateStudyLevel('getQuizLevel');
+  } catch (error) {
+    console.error("Error fetching flashcards from IndexedDB:", error);
+  }
+};
+
+// 初期化処理を行う関数
+const initializeData = async () => {
+  try {
+    await openDatabase();  // 1回だけデータベースを開く
+    await fetchFlashcards();  // IndexedDBからフラッシュカードデータを取得
+  } catch (error) {
+    console.error("Error during initialization:", error);
+  }
+};
+
+// 初期化
+initializeData();
 
 //HTMLが読み込まれてから実行
 document.addEventListener("DOMContentLoaded", async () => {
 
+  await initializeData();
   //URLパラメータから日付データ取得
   const urlParams = new URLSearchParams(window.location.search);
   dateParam = urlParams.get('date');
 
   // 解答を表示させる処理
   try {
-    const apiUrl = 'https://my-flashcard-52952319bda7.herokuapp.com/api/flashcards';
+    // const apiUrl = 'https://my-flashcard-52952319bda7.herokuapp.com/api/flashcards';
 
-    const response = await fetch(apiUrl, {
-      // 自己署名証明書のエラーを無視する場合、以下のオプションを追加することも可能
-      // credentials: 'same-origin',  // Cookieなどを必要とする場合
-      headers: {
-        'Content-Type': 'application/json',
-        // 必要ならばAuthorizationヘッダーを追加
-      },
-    });
+    // const response = await fetch(apiUrl, {
+    //   // 自己署名証明書のエラーを無視する場合、以下のオプションを追加することも可能
+    //   // credentials: 'same-origin',  // Cookieなどを必要とする場合
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     // 必要ならばAuthorizationヘッダーを追加
+    //   },
+    // });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+    // if (!response.ok) {
+    //   throw new Error(`HTTP error! status: ${response.status}`);
+    // }
 
-    flashcards = await response.json();
+    // flashcards = await response.json();
     console.log("Fetched Flashcards:", flashcards); // 取得したフラッシュカードを表示
 
     // nextStudyDateが一致するフラッシュカードをフィルタリング
