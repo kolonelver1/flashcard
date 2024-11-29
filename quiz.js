@@ -1,10 +1,11 @@
 'use strict'; // エラーあれば表示、必ず先頭
 
-let dateParam = [];  // グローバルに宣言
+let dateParam = "";  // グローバルに宣言
 let flashcards = [];
 
 const apiUrl = "https://my-flashcard-52952319bda7.herokuapp.com/api/flashcards";
 
+// APIからフラッシュカードを取得する関数
 async function fetchFlashcards() {
   try {
     // APIサーバーからデータを取得
@@ -21,14 +22,19 @@ async function fetchFlashcards() {
   }
 }
 
-// APIからフラッシュカードを取得する
-fetchFlashcards();
-
 // DOMの読み込み後に実行
 document.addEventListener("DOMContentLoaded", async () => {
-  
+  // APIからフラッシュカードを取得
+  await fetchFlashcards();  // 取得が完了してから次の処理を行う
+
   const urlParams = new URLSearchParams(window.location.search);
   dateParam = urlParams.get('date');
+
+  // dateParamが有効かどうか確認
+  if (!dateParam) {
+    console.error("No date parameter provided.");
+    return;
+  }
 
   // 解答を表示させる処理
   try {
@@ -37,8 +43,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     // nextStudyDateが一致するフラッシュカードをフィルタリング
     const matchingCards = flashcards.filter(card => {
       if (card.nextStudyDate) {
-        const cardDate = card.nextStudyDate.split('T')[0];
-        return cardDate === dateParam.replace(/\//g, '-');
+        const cardDate = card.nextStudyDate.split('T')[0]; // nextStudyDateがあれば日付部分を抽出
+        return cardDate === dateParam.replace(/\//g, '-');  // dateParamに一致するかチェック
       }
       return false;
     });
@@ -54,7 +60,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       console.error('No matching flashcards available for the selected date or missing question property');
     }
   } catch (error) {
-    console.error('Error fetching flashcards:', error);
+    console.error('Error processing flashcards:', error);
   }
 
   // 『解答する』ボタンの処理
