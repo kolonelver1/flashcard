@@ -21,7 +21,7 @@ const openDatabase = () => {
 
     request.onsuccess = (event) => {
       db = event.target.result;
-      resolve(db);
+      resolve(db); // dbオブジェクトを返す
     };
 
     request.onerror = (event) => {
@@ -31,7 +31,11 @@ const openDatabase = () => {
 };
 
 // すべてのフラッシュカードを取得する
-const getAllFlashcards = () => {
+const getAllFlashcards = async () => {
+  if (!db) {
+    await openDatabase(); // dbが未定義なら開く
+  }
+
   return new Promise((resolve, reject) => {
     const transaction = db.transaction("flashcards", "readonly");
     const store = transaction.objectStore("flashcards");
@@ -53,42 +57,29 @@ const getAllFlashcards = () => {
  * @param {Object} flashcard - 保存するフラッシュカードデータ
  */
 export async function saveFlashcard(flashcard) {
+  if (!db) {
+    await openDatabase(); // dbが未定義なら開く
+  }
+
   return new Promise((resolve, reject) => {
-    const dbRequest = indexedDB.open('flashcardDB', 1);
+    const transaction = db.transaction('flashcards', 'readwrite');
+    const store = transaction.objectStore('flashcards');
 
-    dbRequest.onerror = (event) => {
-      console.error('IndexedDB オープンエラー:', event.target.error);
+    // _idがない場合、Date.now()で一意なIDを生成
+    if (!flashcard.id) {
+      flashcard.id = Date.now();
+    }
+
+    const addRequest = store.add(flashcard); // データを追加
+
+    addRequest.onsuccess = () => {
+      console.log('IndexedDB にデータを保存しました:', flashcard);
+      resolve();
+    };
+
+    addRequest.onerror = (event) => {
+      console.error('IndexedDB 保存エラー:', event.target.error);
       reject(event.target.error);
-    };
-
-    dbRequest.onsuccess = (event) => {
-      const db = event.target.result;
-      const transaction = db.transaction('flashcards', 'readwrite');
-      const store = transaction.objectStore('flashcards');
-
-      // _idがない場合、Date.now()で一意なIDを生成
-      if (!flashcard._id) {
-        flashcard._id = Date.now();
-      }
-
-      const addRequest = store.add(flashcard); // データを追加
-
-      addRequest.onsuccess = () => {
-        console.log('IndexedDB にデータを保存しました:', flashcard);
-        resolve();
-      };
-
-      addRequest.onerror = (event) => {
-        console.error('IndexedDB 保存エラー:', event.target.error);
-        reject(event.target.error);
-      };
-    };
-
-    dbRequest.onupgradeneeded = (event) => {
-      const db = event.target.result;
-      if (!db.objectStoreNames.contains('flashcards')) {
-        db.createObjectStore('flashcards', { keyPath: '_id' }); // _idをキーとして使用
-      }
     };
   });
 }
@@ -118,8 +109,11 @@ const deleteFlashcardsFromIndexedDB = async (itemsToDelete) => {
 };
 
 export const updateFlashcardInIndexedDB = async (updatedFlashcard) => {
+  if (!db) {
+    await openDatabase(); // dbが未定義なら開く
+  }
+
   try {
-    const db = await openDatabase(); // データベースを開く
     const tx = db.transaction('flashcards', 'readwrite');
     const store = tx.objectStore('flashcards');
 
@@ -131,7 +125,3 @@ export const updateFlashcardInIndexedDB = async (updatedFlashcard) => {
     console.error('Failed to update flashcard in IndexedDB:', error);
   }
 };
-
-
-// openDatabase と getAllFlashcards をエクスポート
-export { openDatabase, getAllFlashcards, deleteFlashcardsFromIndexedDB };
