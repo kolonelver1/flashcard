@@ -33,7 +33,7 @@ initializeData();
 
 //HTMLが読み込まれてから実行
 document.addEventListener("DOMContentLoaded", async () => {
-
+  await initializeData();
   const urlParams = new URLSearchParams(window.location.search);
   const dateParam = urlParams.get('date');
 
