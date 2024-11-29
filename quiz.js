@@ -3,79 +3,30 @@
 let dateParam = [];  // グローバルに宣言
 let flashcards = [];
 
-// add.js の最初に indexedDB.js から openDatabase をインポート
-import { openDatabase, getAllFlashcards, updateFlashcardInDB } from './indexedDB.js';
+const apiUrl = "https://my-flashcard-52952319bda7.herokuapp.com/api/flashcards";
 
-// IndexedDBからフラッシュカードを取得
-const fetchFlashcards = async () => {
+async function fetchFlashcards() {
   try {
-    // データベースが開かれていることを確認
-    await openDatabase();
-
-    // フラッシュカードを取得
-    flashcards = await getAllFlashcards(); // IndexedDBから取得
-    console.log("All flashcards:", flashcards); // コンソールに表示
-  } catch (error) {
-    console.error("Error fetching flashcards from IndexedDB:", error);
-  }
-};
-
-// IndexedDBのフラッシュカードを更新する処理
-const updateFlashcardsInIndexedDB = async () => {
-  try {
-    // 取得したフラッシュカードの次回学習日を適当な日付に設定
-    const updatedFlashcards = flashcards.map(card => {
-      // nextStudyDateを適当な日付に変更（例えば、未来の無効な日付）
-      card.nextStudyDate = '9999-12-31T00:00:00Z'; // ここで無効な日付を設定
-      return card;
-    });
-
-    // 更新後のフラッシュカードをindexedDBに保存
-    for (const card of updatedFlashcards) {
-      await updateFlashcardInDB(card); // indexedDB内で更新
-    }
-
-    console.log('Flashcards updated in IndexedDB:', updatedFlashcards);
-  } catch (error) {
-    console.error('Error updating flashcards in IndexedDB:', error);
-  }
-};
-
-// APIサーバーでの更新処理
-const updateFlashcardsInAPI = async () => {
-  try {
-    // APIサーバーでデータを更新
-    const response = await fetch('/api/updateFlashcards', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ flashcards: flashcards }), // 必要なデータを送信
-    });
-
+    // APIサーバーからデータを取得
+    const response = await fetch(apiUrl);
     if (!response.ok) {
-      throw new Error('Failed to update flashcards in API');
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data = await response.json();
-    console.log('Flashcards updated in API:', data);
+    // レスポンスからJSONデータを取得
+    flashcards = await response.json();
+    console.log("Fetched Flashcards:", flashcards);
   } catch (error) {
-    console.error('Error updating flashcards in API:', error);
+    console.error("Error fetching flashcards from API:", error);
   }
-};
+}
 
-// 初期化処理を行う関数
-const initializeData = async () => {
-  try {
-    await openDatabase();  // 1回だけデータベースを開く
-    await fetchFlashcards();  // IndexedDBからフラッシュカードデータを取得
-  } catch (error) {
-    console.error("Error during initialization:", error);
-  }
-};
+// APIからフラッシュカードを取得する
+fetchFlashcards();
 
 // DOMの読み込み後に実行
 document.addEventListener("DOMContentLoaded", async () => {
-  await initializeData(); // 初期化処理
-
+  
   const urlParams = new URLSearchParams(window.location.search);
   dateParam = urlParams.get('date');
 
