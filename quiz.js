@@ -9,12 +9,11 @@ import { openDatabase, getAllFlashcards } from './indexedDB.js';
 const fetchFlashcards = async () => {
   try {
     await openDatabase(); // IndexedDBを開く
+
     flashcards = await getAllFlashcards(); // 全てのフラッシュカードを取得
     console.log("Fetched flashcards:", flashcards); // デバッグ用ログ
-    return flashcards; // データを返す
   } catch (error) {
     console.error("Error fetching flashcards from IndexedDB:", error);
-    throw error;
   }
 };
 

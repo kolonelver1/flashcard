@@ -21,10 +21,12 @@ const openDatabase = () => {
 
     request.onsuccess = (event) => {
       db = event.target.result;
+      console.log("Database opened successfully");
       resolve(db);
     };
 
     request.onerror = (event) => {
+      console.error("Failed to open database:", event.target.error);
       reject(event.target.error);
     };
   });
@@ -39,15 +41,17 @@ const getAllFlashcards = async () => {
       const request = store.getAll();
 
       request.onerror = function () {
-        reject('Error fetching flashcards from IndexedDB');
+        console.error("Error fetching flashcards from IndexedDB");
+        reject("Error fetching flashcards from IndexedDB");
       };
 
       request.onsuccess = function () {
-        console.log('Fetched flashcards:', request.result);  // データを確認
+        console.log("Fetched flashcards:", request.result);
         resolve(request.result);
       };
     }).catch(error => {
-      reject('Failed to open database: ' + error);
+      console.error("Failed to open database for fetching flashcards:", error);
+      reject("Failed to open database for fetching flashcards");
     });
   });
 };
